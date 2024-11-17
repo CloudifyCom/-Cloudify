@@ -7,11 +7,90 @@
     <groupId>com.cloudify</groupId>
     <artifactId>Cloudify</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>api</module>
+        <module>services</module>
+        <module>entities</module>
+    </modules>
+
+    <name>Cloudify</name>
+    <description>Namen projekta je razviti spletno aplikacijo za letalsko družbo, ki omogoča iskanje letov, rezervacije, prijavo na let in sledenje statusu letov. Aplikacija rešuje problem neučinkovitih in nepovezanih sistemov, ki uporabnikom otežujejo prijavo na let in obveščanje o stanju letov. Naša rešitev uporablja mikrostoritveno arhitekturo, ki zagotavlja večjo zanesljivost, skalabilnost in odzivnost.</description>
 
     <properties>
         <maven.compiler.source>19</maven.compiler.source>
         <maven.compiler.target>19</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+
+        <kumuluzee.version>4.1.0</kumuluzee.version>
+        <kumuluzee-streaming.version>1.2.2</kumuluzee-streaming.version>
+        <kumuluzee-rest.version>1.5.1</kumuluzee-rest.version>
+        <kumuluzee-swagger.version>1.2.2</kumuluzee-swagger.version>
+        <kumuluzee-openapi.version>1.0.1</kumuluzee-openapi.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.kumuluz.ee</groupId>
+                <artifactId>kumuluzee-bom</artifactId>
+                <version>${kumuluzee.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.kumuluz.ee</groupId>
+            <artifactId>kumuluzee-javamail-ri</artifactId>
+            <version>${kumuluzee.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.kumuluz.ee.streaming</groupId>
+            <artifactId>kumuluzee-streaming-kafka</artifactId>
+            <version>${kumuluzee-streaming.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.kumuluz.ee.rest</groupId>
+            <artifactId>kumuluzee-rest-core</artifactId>
+            <version>${kumuluzee-rest.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.kumuluz.ee.swagger</groupId>
+            <artifactId>kumuluzee-swagger</artifactId>
+            <version>${kumuluzee-swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.kumuluz.ee.openapi</groupId>
+            <artifactId>kumuluzee-openapi</artifactId>
+            <version>${kumuluzee-openapi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.kumuluz.ee</groupId>
+            <artifactId>kumuluzee-microProfile-3.3</artifactId>
+            <version>${kumuluzee.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.kumuluz.ee</groupId>
+                <artifactId>kumuluzee-maven-plugin</artifactId>
+                <version>${kumuluzee.version}</version>
+                <executions>
+                    <execution>
+                        <id>package</id>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
