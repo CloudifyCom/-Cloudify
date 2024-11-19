@@ -19,16 +19,14 @@
     <description>Namen projekta je razviti spletno aplikacijo za letalsko družbo, ki omogoča iskanje letov, rezervacije, prijavo na let in sledenje statusu letov. Aplikacija rešuje problem neučinkovitih in nepovezanih sistemov, ki uporabnikom otežujejo prijavo na let in obveščanje o stanju letov. Naša rešitev uporablja mikrostoritveno arhitekturo, ki zagotavlja večjo zanesljivost, skalabilnost in odzivnost.</description>
 
     <properties>
-        <maven.compiler.source>19</maven.compiler.source>
-        <maven.compiler.target>19</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 
         <kumuluzee.version>4.1.0</kumuluzee.version>
-        <kumuluzee-streaming.version>1.2.2</kumuluzee-streaming.version>
-        <kumuluzee-rest.version>1.5.1</kumuluzee-rest.version>
-        <kumuluzee-swagger.version>1.2.2</kumuluzee-swagger.version>
-        <kumuluzee-openapi.version>1.0.1</kumuluzee-openapi.version>
+        <postgresql.version>42.6.0</postgresql.version>
+        <kumuluzee-rest.version>2.0.1</kumuluzee-rest.version>
     </properties>
 
     <dependencyManagement>
@@ -40,57 +38,75 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>com.kumuluz.ee.config</groupId>
+                <artifactId>kumuluzee-config-mp</artifactId>
+                <version>${kumuluzee-config-mp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.kumuluz.ee.openapi</groupId>
+                <artifactId>kumuluzee-openapi-mp</artifactId>
+                <version>${kumuluzee-openapi-mp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.kumuluz.ee.openapi</groupId>
+                <artifactId>kumuluzee-openapi-mp-ui</artifactId>
+                <version>${kumuluzee-openapi-mp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.kumuluz.ee.rest</groupId>
+                <artifactId>kumuluzee-rest-core</artifactId>
+                <version>${kumuluzee-rest.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.kumuluz.ee.cors</groupId>
+                <artifactId>kumuluzee-cors</artifactId>
+                <version>${kumuluzee-cors.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.kumuluz.ee.health</groupId>
+                <artifactId>kumuluzee-health</artifactId>
+                <version>${kumuluzee-health.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.kumuluz.ee.rest-client</groupId>
+                <artifactId>kumuluzee-rest-client</artifactId>
+                <version>${kumuluzee-rest-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.kumuluz.ee.security</groupId>
+                <artifactId>kumuluzee-security-keycloak</artifactId>
+                <version>${kumuluzee-security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.keycloak</groupId>
+                <artifactId>keycloak-jetty94-adapter</artifactId>
+                <version>${keycloak.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.cloudify</groupId>
+                <artifactId>api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.cloudify</groupId>
+                <artifactId>entities</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.cloudify</groupId>
+                <artifactId>services</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.kumuluz.ee</groupId>
-            <artifactId>kumuluzee-javamail-ri</artifactId>
-            <version>${kumuluzee.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.kumuluz.ee.streaming</groupId>
-            <artifactId>kumuluzee-streaming-kafka</artifactId>
-            <version>${kumuluzee-streaming.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.kumuluz.ee.rest</groupId>
-            <artifactId>kumuluzee-rest-core</artifactId>
-            <version>${kumuluzee-rest.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.kumuluz.ee.swagger</groupId>
-            <artifactId>kumuluzee-swagger</artifactId>
-            <version>${kumuluzee-swagger.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.kumuluz.ee.openapi</groupId>
-            <artifactId>kumuluzee-openapi</artifactId>
-            <version>${kumuluzee-openapi.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.kumuluz.ee</groupId>
-            <artifactId>kumuluzee-microProfile-3.3</artifactId>
-            <version>${kumuluzee.version}</version>
-        </dependency>
-    </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.kumuluz.ee</groupId>
-                <artifactId>kumuluzee-maven-plugin</artifactId>
-                <version>${kumuluzee.version}</version>
-                <executions>
-                    <execution>
-                        <id>package</id>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>
