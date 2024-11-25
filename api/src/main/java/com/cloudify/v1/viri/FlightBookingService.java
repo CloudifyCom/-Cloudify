@@ -19,8 +19,6 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class FlightBookingService {
 
-    //private Map<String, Booking> bookingDatabase = new HashMap<>();
-
     @GET
     @Path("/{bookingId}")
     public Response getBooking(@PathParam("bookingId") String bookingId) {

@@ -19,9 +19,6 @@ import java.util.UUID;
 @Produces(MediaType.APPLICATION_JSON)
 public class PaymentService {
 
-//    private Map<Long, Payment> paymentDatabase = new HashMap<>();
-//    private long idCounter = 1;
-
     @GET
     @Path("/{paymentId}")
     public Response getPayment(@PathParam("paymentId") String paymentId) {
