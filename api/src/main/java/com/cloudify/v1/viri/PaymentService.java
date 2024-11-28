@@ -2,6 +2,12 @@ package com.cloudify.v1.viri;
 import com.cloudify.entities.Flight;
 import com.cloudify.entities.Notification;
 import com.cloudify.entities.Payment;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.*;
@@ -19,6 +25,13 @@ import java.util.UUID;
 @Produces(MediaType.APPLICATION_JSON)
 public class PaymentService {
 
+
+    @Operation(description = "Retrieve the details of an existing payment using the paymentId.", summary = "Get payment details")
+    @APIResponses({
+            @APIResponse(description = "Successful retrieval of payment!", responseCode = "200", content = @Content(schema = @Schema(implementation = Payment.class))),
+            @APIResponse(description = "Payment not found!", responseCode = "404")
+    })
+    @Tag(name = "Payment Service")
     @GET
     @Path("/{paymentId}")
     public Response getPayment(@PathParam("paymentId") String paymentId) {
@@ -31,6 +44,14 @@ public class PaymentService {
         return Response.ok(payment).build();
     }
 
+
+    @Operation(description = "Process a payment for a specific booking.", summary = "Make a payment")
+    @APIResponses({
+            @APIResponse(description = "Payment successfully processed!", responseCode = "201", content = @Content(schema = @Schema(implementation = Payment.class))),
+            @APIResponse(description = "Validation exception!", responseCode = "422"),
+            @APIResponse(description = "Invalid input!", responseCode = "404")
+    })
+    @Tag(name = "Payment Service")
     @POST
     public Response makePayment(Payment paymentDetails) {
 
@@ -54,6 +75,12 @@ public class PaymentService {
         return Response.status(201).entity(payment).build();
     }
 
+    @Operation(description = "Update the status or other details of an existing payment.", summary = "Update payment details")
+    @APIResponses({
+            @APIResponse(description = "Payment successfully updated!", responseCode = "200", content = @Content(schema = @Schema(implementation = Payment.class))),
+            @APIResponse(description = "Invalid payment data!", responseCode = "400")
+    })
+    @Tag(name = "Payment Service")
     @PUT
     @Path("/{paymentId}")
     public Response updatePayment(@PathParam("paymentId") String paymentId, String paymentStatus){//Payment updatedPayment) {

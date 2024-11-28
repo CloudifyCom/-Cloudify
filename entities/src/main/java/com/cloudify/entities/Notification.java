@@ -1,19 +1,38 @@
 package com.cloudify.entities;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Schema(description = "Notification information")
 public class Notification implements Serializable {
 
+    @Schema(description = "notificationId", example = "1")
     private String notificationId;
+
+    @Schema(description = "userId", example = "198772")
     private String userId;
+
+    //@Schema(description = "notifiedUsers")
     //private List<User> notifiedUsers;
+
+    @Schema(description = "textLength", example = "70")
     private Integer textLength;
+
+    @Schema(description = "sendingTime", example = "2024-11-24T14:30:45")
     private LocalDateTime sendingTime;
+
+    @Schema(description = "title", example = "Attention weather forecast")
     private String title;
+
+    @Schema(description = "content", example = "Due to bad weather, your next flight on 2024-11-26 will be cancelled.")
     private String content;
+
+    @Schema(description = "notificationType", example = "warning")
     private String notificationType;
+
 
     public Notification() {}
 

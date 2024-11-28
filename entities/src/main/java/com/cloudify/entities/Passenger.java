@@ -1,11 +1,19 @@
 package com.cloudify.entities;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import java.io.Serializable;
 
+@Schema(description = "Passenger information")
 public class Passenger implements Serializable {
 
+    @Schema(description = "Passenger's name", example = "John")
     private String firstName;
+
+    @Schema(description = "Passenger's lastname", example = "Doe")
     private String lastName;
+
+    @Schema(description = "Passenger's passportNumber", example = "P987654321")
     private String passportNumber;
 
     public Passenger() {}

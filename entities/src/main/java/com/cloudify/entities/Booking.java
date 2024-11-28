@@ -1,12 +1,24 @@
 package com.cloudify.entities;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import java.io.Serializable;
 import java.util.List;
 
+
+@Schema(description = "Booking information")
 public class Booking implements Serializable {
+
+    @Schema(description = "bookingId", example = "BK987654")
     private String bookingId;
+
+    @Schema(description = "Flight")
     private Flight flight;
+
+    @Schema(description = "List<Passenger>")
     private List<Passenger> passengers;
+
+    @Schema(description = "totalPrice", example = "250.50")
     private double totalPrice;
 
     public Booking() {}

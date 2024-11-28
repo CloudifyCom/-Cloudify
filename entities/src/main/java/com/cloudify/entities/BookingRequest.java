@@ -1,15 +1,22 @@
 package com.cloudify.entities;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import java.io.Serializable;
 import java.util.List;
 
-
+@Schema(description = "BookingRequest information")
 public class BookingRequest implements Serializable {
 
     //Proces rezervisanja leta preko BookingRequesta
 
+    @Schema(description = "flight")
     private Flight flight;
+
+    @Schema(description = "Passenger")
     private Passenger passenger;
+
+    @Schema(description = "Payment")
     private Payment paymentMethod;
 
     public BookingRequest() {}

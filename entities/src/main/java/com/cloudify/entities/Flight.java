@@ -1,18 +1,38 @@
 package com.cloudify.entities;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@Schema(description = "Flight information")
 public class Flight implements Serializable {
 
+    @Schema(description = "Flight identifier", example = "AB1234")
     private String flightId;
+
+    @Schema(description = "airline", example = "Delta Airlines")
     private String airline;
+
+    @Schema(description = "origin", example = "LAX")
     private String origin;
+
+    @Schema(description = "destination", example = "JFK")
     private String destination;
+
+    @Schema(description = "departureTime", example = "2024-11-20T08:00:00Z")
     private LocalDateTime departureTime;
+
+    @Schema(description = "arrivalTime", example = "2024-11-20T08:00:00Z")
     private LocalDateTime arrivalTime;
+
+    @Schema(description = "price", example = "250.50")
     private double price;
+
+    @Schema(description = "duration", example = "PT6H30M")
     private String duration;
+
+    @Schema(description = "maxSeats", example = "20")
     private Integer maxSeats;
 
     public  Flight() {}

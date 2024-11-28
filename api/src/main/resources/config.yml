@@ -19,6 +19,20 @@ kumuluzee:
       - class: api-service
         url: http://localhost:8082/v1
         read-timeout: 5000
-integrations:
-  external-api:
-    base-url: http://localhost:8082/v1
+
+  openapi-mp:
+    enabled: true
+    info:
+      title: "Swagger !Cloudify - OpenAPI 3.0"
+      description: "Description of your project"
+      version: "1.0.11"
+    servers:
+      - url: "http://localhost:8080/v1"
+    tags:
+      - name: "Flight Booking Service"
+        description: "Everything about your booking"
+    openapi-mp-ui:
+      enabled: true
+      path: "/swagger-ui"
+      title: "API Documentation"
+      filter: true

@@ -1,18 +1,38 @@
 package com.cloudify.entities;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@Schema(description = "Payment information")
 public class Payment implements Serializable {
 
+    @Schema(description = "paymentId", example = "123456789")
     private String paymentId;
+
+    @Schema(description = "date", example = "2024-11-25T14:30:00")
     private LocalDateTime date;
+
+    @Schema(description = "userId", example = "198772")
     private Long userId;
+
+    //@Schema(description = "sender")
     //private User sender;
+
+    @Schema(description = "paymentStatus", example = "ACCEPTED")
     private String paymentStatus;
+
+    @Schema(description = "amount", example = "100.42")
     private double amount;
+
+    @Schema(description = "currency", example = "USD")
     private String currency;
+
+    @Schema(description = "flightId", example = "AB1234")
     private String flightId;
+
+    @Schema(description = "transactionId", example = "TX123456789")
     private String transactionId;
 
     public Payment() {}
