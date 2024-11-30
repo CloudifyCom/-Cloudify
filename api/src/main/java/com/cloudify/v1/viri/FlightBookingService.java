@@ -33,7 +33,7 @@ import javax.ws.rs.core.Response;
 @Path("/bookings")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class FlightBookingService {
+public class  FlightBookingService {
 
     @Operation(description = "Retrieve the details of an existing booking using the bookingId.", summary = "Get an existing booking")
     @APIResponses({
