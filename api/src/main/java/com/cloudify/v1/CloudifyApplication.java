@@ -28,6 +28,7 @@ import javax.ws.rs.core.Application;
         },
         components = @Components(
                 schemas = {
+                        @Schema(name = "FlightBookingRequest", description = "Flight booking request", implementation = BookingRequest.class)
                         @Schema(name = "Flight", description = "Flight details", implementation = Flight.class),
                         @Schema(name = "Booking", description = "Booking details", implementation = Booking.class),
                         @Schema(name = "BookingRequest", description = "Booking request details", implementation = BookingRequest.class),

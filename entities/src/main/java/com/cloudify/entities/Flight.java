@@ -35,10 +35,13 @@ public class Flight implements Serializable {
     @Schema(description = "maxSeats", example = "20")
     private Integer maxSeats;
 
+    @Schema(description = "travelClass", example = "economy")
+    private String travelClass;
+
     public  Flight() {}
 
     // Parameterized constructor
-    public Flight(String flightId, String airline, String origin, String destination, LocalDateTime departureTime, LocalDateTime arrivalTime, double price, String duration, Integer maxSeats) {
+    public Flight(String flightId, String airline, String origin, String destination, LocalDateTime departureTime, LocalDateTime arrivalTime, double price, String duration, Integer maxSeats, String travelClass) {
         this.flightId = flightId;
         this.airline = airline;
         this.origin = origin;
@@ -48,6 +51,7 @@ public class Flight implements Serializable {
         this.price = price;
         this.duration = duration;
         this.maxSeats = maxSeats;
+        this.travelClass = travelClass;
     }
 
     public Flight(String flightId, String airline, String origin, String destination, LocalDateTime arrivalTime, double price, Integer maxSeats) {
@@ -132,5 +136,13 @@ public class Flight implements Serializable {
 
     public void setMaxSeats(Integer maxSeats) {
         this.maxSeats = maxSeats;
+    }
+
+    public String getTravelClass() {
+        return travelClass;
+    }
+
+    public void setTravelClass(String travelClass) {
+        this.travelClass = travelClass;
     }
 }
