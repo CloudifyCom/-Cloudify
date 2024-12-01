@@ -48,7 +48,8 @@ public class InventoryService {
                     responseCode = "400"
             ),
             @APIResponse(
-                    description = "Internal server error."
+                    description = "Internal server error.",
+                    responseCode = "500"
             )
     })
     @Tag(name = "Inventory Service")
@@ -57,6 +58,7 @@ public class InventoryService {
                                 @QueryParam("departureDate") String departureDate,
                                 @QueryParam("returnDate") String returnDate) {
         // Logic for fetching flights
+
         return Response.ok(/* list of flights */).build();
     }
 
@@ -100,6 +102,7 @@ public class InventoryService {
                     responseCode = "500"
             )
     })
+    @Tag(name = "Inventory Service")
     public Response getFlightDetails(
             @Parameter(description = "Unique identifier of the flight", required = true, example = "ABC123")
             @PathParam("flightId") String flightId
@@ -129,6 +132,7 @@ public class InventoryService {
                     responseCode = "500"
             )
     })
+    @Tag(name = "Inventory Service")
     public Response getSeatAvailability(
             @Parameter(description = "Unique identifier of the flight", required = true, example = "ABC123")
             @PathParam("flightId") String flightId
@@ -162,6 +166,7 @@ public class InventoryService {
                     responseCode = "500"
             )
     })
+    @Tag(name = "Inventory Service")
     public Response updateSeatAvailability(
             @Parameter(description = "Unique identifier of the flight", required = true, example = "ABC123")
             @PathParam("flightId") String flightId,
