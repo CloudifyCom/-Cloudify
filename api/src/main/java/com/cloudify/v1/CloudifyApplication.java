@@ -25,7 +25,12 @@ import javax.ws.rs.core.Application;
                 @Tag(name = "Flight Booking Service", description = "Everything about your booking"),
                 @Tag(name = "Notification Service", description = "Access to flight-related notifications"),
                 @Tag(name = "Payment Service", description = "Operations related to payment processing")
-        }
+        },
+        components = @Components(
+                schemas = {
+                        @Schema(name = "FlightBookingRequest", description = "Flight booking request", implementation = BookingRequest.class)
+                }
+        )
 )
 @ApplicationPath("v1")
 public class CloudifyApplication extends Application {

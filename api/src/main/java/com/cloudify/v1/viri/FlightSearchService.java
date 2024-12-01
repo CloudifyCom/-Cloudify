@@ -58,6 +58,6 @@ public class FlightSearchService {
 
         FlightSearchResponse response = new FlightSearchResponse();
 
-        return Response.ok(response).build();
+        return Response.ok("kurac").build();
     }
 }
