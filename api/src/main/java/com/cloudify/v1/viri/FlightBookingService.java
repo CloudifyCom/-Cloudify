@@ -33,12 +33,19 @@ import javax.ws.rs.core.Response;
 @Path("/bookings")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class FlightBookingService {
+public class  FlightBookingService {
 
     @Operation(description = "Retrieve the details of an existing booking using the bookingId.", summary = "Get an existing booking")
     @APIResponses({
-            @APIResponse(description = "Successful retrieval of booking!", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Booking.class))),
-            @APIResponse(description = "Booking not found!", responseCode = "404")
+            @APIResponse(
+                    description = "Successful retrieval of booking!",
+                    responseCode = "200",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Booking.class))
+            ),
+            @APIResponse(
+                    description = "Booking not found!",
+                    responseCode = "404"
+            )
     })
     @Tag(name = "Flight Booking Service")
     @GET
@@ -51,7 +58,8 @@ public class FlightBookingService {
         if (obstaja){//booking == null) {
             return Response.status(404).build();
         }
-        return Response.ok(bookingId).build();
+        Booking booking = new Booking(bookingId, null);
+        return Response.ok(booking).build();
     }
 
     @Operation(description = "Create a new booking for a flight with passenger details and payment method.", summary = "Create a new flight booking")
