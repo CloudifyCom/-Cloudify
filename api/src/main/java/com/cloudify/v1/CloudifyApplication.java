@@ -39,7 +39,10 @@ import javax.ws.rs.core.Application;
                         @Schema(name = "SeatAvailability", description = "Seat availability details", implementation = SeatAvailability.class),
                         @Schema(name = "SeatUpdate", description = "Seat update details", implementation = SeatUpdate.class),
                         @Schema(name = "Payment", description = "Payment details", implementation = Payment.class),
-                        @Schema(name = "Notification", description = "Notification details", implementation = Notification.class)
+                        @Schema(name = "Notification", description = "Notification details", implementation = Notification.class),
+                        @Schema(name = "FlightStatus", description = "Flight status details", implementation = FlightStatus.class),
+                        @Schema(name = "WeatherDelayPrediction", description = "Weather and delay prediction details", implementation = WeatherDelayPrediction.class),
+                        @Schema(name = "FlightSearchResponse", description = "Flight search response", implementation = FlightSearchResponse.class)
                 }
         )
 )
