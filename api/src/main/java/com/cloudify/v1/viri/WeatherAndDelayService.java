@@ -1,5 +1,7 @@
 package com.cloudify.v1.viri;
 
+import com.cloudify.beans.WeatherApiClient;
+import com.cloudify.beans.WeatherAndDelayServiceZrno;
 import com.cloudify.entities.WeatherDelayPrediction;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -11,6 +13,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import javax.inject.Inject;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -36,8 +39,14 @@ import java.nio.charset.StandardCharsets;
 @Produces(MediaType.APPLICATION_JSON)
 public class WeatherAndDelayService {
 
-    private static final String API_KEY = "d576c288a6614b35845231225240112";
-    private static final String WEATHER_API_URL = "https://api.weatherapi.com/v1/current.json";
+    //ZRNA
+    @Inject
+    WeatherApiClient weatherApiClient;
+    @Inject
+    WeatherAndDelayServiceZrno weatherAndDelayServiceZrno;
+
+    //private static final String API_KEY = "d576c288a6614b35845231225240112";
+    //private static final String WEATHER_API_URL = "https://api.weatherapi.com/v1/current.json";
 
     private static final Map<String, String[]> FLIGHT_DATABASE = new HashMap<>() {{
         put("52", new String[]{"New York", "Los Angeles"});
@@ -69,6 +78,8 @@ public class WeatherAndDelayService {
         put("78", new String[]{"Auckland", "Wellington"});
         put("79", new String[]{"Bangalore", "Hyderabad"});
         put("80", new String[]{"Lagos", "Douala"});
+
+        put("81", new String[]{"Los Angeles", "Tokyo"});
     }};
 
     @Operation(description = "Predict weather and delays for a flight.", summary = "Predict weather and delays")
@@ -93,25 +104,9 @@ public class WeatherAndDelayService {
             String finalDestination = flightData[1];
 
             WeatherDelayPrediction originPrediction = getWeatherData(origin, flightId);
-
             WeatherDelayPrediction destinationPrediction = getWeatherData(finalDestination, flightId);
 
-            double originDelay = Double.parseDouble(originPrediction.getDelayProbability().replace("%", ""));
-            double destinationDelay = Double.parseDouble(destinationPrediction.getDelayProbability().replace("%", ""));
-            double finalProbabilityOfDelay = (originDelay + destinationDelay) / 2;
-
-            WeatherDelayPrediction prediction = new WeatherDelayPrediction();
-            prediction.setFlightId(flightId);
-            prediction.setWeatherForecast(originPrediction.getWeatherForecast());
-            prediction.setDelayProbability(originPrediction.getDelayProbability());
-            prediction.setFinalDestination(finalDestination);
-            prediction.setFinalDestinationWeatherForecast(destinationPrediction.getWeatherForecast());
-            prediction.setFinalDestinationDelayProbability(destinationPrediction.getDelayProbability());
-            prediction.setWindSpeed(originPrediction.getWindSpeed());
-            prediction.setVisibility(originPrediction.getVisibility());
-            prediction.setHumidity(originPrediction.getHumidity());
-            prediction.setTemperature(originPrediction.getTemperature());
-            prediction.setFinalProbabilityOfDelay(String.format("%.0f%%", finalProbabilityOfDelay));
+            WeatherDelayPrediction prediction = weatherAndDelayServiceZrno.getWeatherAndDelayPrediction(flightId, originPrediction, destinationPrediction, finalDestination, origin);
 
             return Response.ok(prediction).build();
 
@@ -121,20 +116,14 @@ public class WeatherAndDelayService {
         }
     }
 
-    private WeatherDelayPrediction getWeatherData(String location, String flightId) throws Exception {
-        HttpClient client = HttpClient.newHttpClient();
-        String encodedLocation = URLEncoder.encode(location, StandardCharsets.UTF_8);
-        URI uri = URI.create(WEATHER_API_URL + "?key=" + API_KEY + "&q=" + encodedLocation);
+    public WeatherDelayPrediction getWeatherData(String location, String flightId) throws Exception {
 
-        HttpRequest request = HttpRequest.newBuilder(uri)
-                .GET()
-                .build();
+        HttpClient client = weatherApiClient.getHttpClient();
+        URI uri = weatherApiClient.getApiURI(location);
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpRequest request = weatherApiClient.buildGetRequest(uri);
 
-        if (response.statusCode() != 200) {
-            throw new Exception("Error retrieving weather data for " + location);
-        }
+        HttpResponse<String> response = weatherApiClient.getAResponse(client, request, location);
 
         String weatherForecast = parseWeatherForecast(response.body());
         double windSpeed = parseWeatherAttribute(response.body(), "wind_kph");
