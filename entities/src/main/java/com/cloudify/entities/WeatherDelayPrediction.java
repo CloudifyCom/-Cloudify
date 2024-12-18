@@ -17,6 +17,9 @@ public class WeatherDelayPrediction {
     @Schema(description = "Final destination of the flight", example = "Los Angeles", required = true)
     private String finalDestination;
 
+    @Schema(description = "Final destination of the flight", example = "Los Angeles", required = true)
+    private String originalDestination;
+
     @Schema(description = "Weather forecast for the final destination", example = "Clear", required = true)
     private String finalDestinationWeatherForecast;
 
@@ -71,6 +74,12 @@ public class WeatherDelayPrediction {
     public void setFinalDestination(String finalDestination) {
         this.finalDestination = finalDestination;
     }
+
+    public String getOriginDestination() {
+        return originalDestination;
+    }
+
+    public void setOriginDestination(String originalDestination) { this.originalDestination = originalDestination; }
 
     public String getFinalDestinationWeatherForecast() {
         return finalDestinationWeatherForecast;
