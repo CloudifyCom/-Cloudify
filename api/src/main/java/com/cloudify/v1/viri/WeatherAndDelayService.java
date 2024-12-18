@@ -73,7 +73,11 @@ public class WeatherAndDelayService {
 
     @Operation(description = "Predict weather and delays for a flight.", summary = "Predict weather and delays")
     @APIResponses({
-            @APIResponse(description = "Weather and delay prediction retrieved successfully", responseCode = "200", content = @Content(schema = @Schema(implementation = WeatherDelayPrediction.class))),
+            @APIResponse(
+                    description = "Weather and delay prediction retrieved successfully",
+                    responseCode = "200",
+                    content = @Content(schema = @Schema(implementation = WeatherDelayPrediction.class))
+            ),
             @APIResponse(description = "Invalid input!", responseCode = "400"),
             @APIResponse(description = "Error retrieving weather data", responseCode = "500")
     })
