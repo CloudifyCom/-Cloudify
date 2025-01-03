@@ -31,7 +31,7 @@ The project addresses inefficiencies in disconnected systems that make it challe
 9. **🌦️ Weather and Delay Prediction Service**: Predict delays based on weather conditions.
 
 ### 🖼️ Architectural Diagram
-*(Add your architectural diagram here in Markdown or as a linked image)*
+*(Dodaj sliku arhitekture)*
 
 ---
 
@@ -58,7 +58,7 @@ The project addresses inefficiencies in disconnected systems that make it challe
    git clone https://github.com/ilijagavrilovic/-Cloudify.git
    ```
 2. Set up PostgreSQL and create required databases.
-3. Navigate to each microservice directory and build the service:
+3. Build the services:
    ```bash
    mvn clean install
    ```
