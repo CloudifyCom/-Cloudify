@@ -2,6 +2,9 @@ package com.cloudify.entities;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import java.util.List;
 
 @Schema(description = "Response containing available flights based on search criteria")
@@ -59,6 +62,12 @@ public class FlightSearchResponse {
 
         @Schema(description = "Flight duration in minutes", example = "330", required = false)
         private int flightDuration;
+
+        @Schema(description = "Departure time", example = "16:00", required = false)
+        private LocalDateTime departureTime;
+
+        @Schema(description = "Arrival time", example = "16:00", required = false)
+        private LocalDateTime arrivalTime;
 
         // Getters and Setters
         public String getFlightId() {
@@ -131,6 +140,22 @@ public class FlightSearchResponse {
 
         public void setFlightDuration(int flightDuration) {
             this.flightDuration = flightDuration;
+        }
+
+        public LocalDateTime  getArrivalTime() {
+            return arrivalTime;
+        }
+
+        public void setArrivalTime(LocalDateTime arrivalTime) {
+            this.arrivalTime = arrivalTime;
+        }
+
+        public LocalDateTime  getDepartureTime() {
+            return departureTime;
+        }
+
+        public void setDepartureTime(LocalDateTime departureTime) {
+            this.departureTime = departureTime;
         }
     }
 }
