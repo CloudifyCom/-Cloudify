@@ -1,10 +1,6 @@
 package com.cloudify.v1.viri;
 
-import com.cloudify.entities.LoyaltyMember;
-import com.cloudify.entities.User;
-import com.cloudify.entities.BookingRequest;
-import com.cloudify.entities.Booking;
-import com.cloudify.entities.Passenger;
+import com.cloudify.beans.InventoryServiceApiBean;
 import com.cloudify.entities.Flight;
 import com.cloudify.entities.SeatAvailability;
 import com.cloudify.entities.SeatUpdate;
@@ -19,6 +15,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -34,6 +31,9 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class InventoryService {
+
+    @Inject
+    InventoryServiceApiBean inventoryServiceApiBean;
 
     @GET
     @Operation(summary = "Get a list of available flights", description = "Retrieve available flights based on origin, destination, and date range.")
@@ -57,9 +57,7 @@ public class InventoryService {
                                 @QueryParam("destination") String destination,
                                 @QueryParam("departureDate") String departureDate,
                                 @QueryParam("returnDate") String returnDate) {
-        // Logic for fetching flights
-
-        return Response.ok(/* list of flights */).build();
+        return Response.ok(inventoryServiceApiBean.listFlights(origin, destination, departureDate, returnDate)).build();
     }
 
     @POST
@@ -81,8 +79,7 @@ public class InventoryService {
     })
     @Tag(name = "Inventory Service")
     public Response addFlight(Flight flight) {
-        // Logic for adding a new flight
-        return Response.status(Response.Status.CREATED).entity(flight).build();
+        return Response.status(Response.Status.CREATED).entity(inventoryServiceApiBean.addFlight(flight)).build();
     }
 
     @GET
@@ -108,12 +105,12 @@ public class InventoryService {
             @PathParam("flightId") String flightId
     ) {
         try {
-            // Logic to get flight details
-            return Response.ok(/* flight details object */).build();
+            return Response.ok(inventoryServiceApiBean.getFlightDetails(flightId)).build();
         } catch (Exception e) {
             return Response.status(500).entity("Internal server error").build();
         }
     }
+
     @GET
     @Path("/{flightId}/seats")
     @Operation(summary = "Get seat availability", description = "Retrieve available seats for a specific flight.")
@@ -138,8 +135,7 @@ public class InventoryService {
             @PathParam("flightId") String flightId
     ) {
         try {
-            // Logic to retrieve seat availability
-            return Response.ok(/* seat availability object */).build();
+            return Response.ok(inventoryServiceApiBean.getSeatAvailability(flightId)).build();
         } catch (Exception e) {
             return Response.status(500).entity("Internal server error").build();
         }
@@ -173,8 +169,7 @@ public class InventoryService {
             SeatUpdate seatUpdate
     ) {
         try {
-            // Logic to update seat availability
-            return Response.ok(/* updated seat availability object */).build();
+            return Response.ok(inventoryServiceApiBean.updateSeatAvailability(flightId, seatUpdate)).build();
         } catch (Exception e) {
             return Response.status(500).entity("Internal server error").build();
         }

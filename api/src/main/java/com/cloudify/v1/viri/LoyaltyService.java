@@ -1,26 +1,21 @@
 package com.cloudify.v1.viri;
 
+import com.cloudify.beans.LoyaltyServiceApiBean;
 import com.cloudify.entities.LoyaltyMember;
-import com.cloudify.entities.User;
-import com.cloudify.entities.BookingRequest;
-import com.cloudify.entities.Booking;
-import com.cloudify.entities.Passenger;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
 
 @OpenAPIDefinition(
         info = @Info(
@@ -34,7 +29,10 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class LoyaltyService {
 
+    @Inject
+    LoyaltyServiceApiBean loyaltyServiceApiBean;
 
+    @GET
     @Operation(summary = "List all loyalty members", description = "Retrieve all users enrolled in the loyalty program.")
     @APIResponses({
             @APIResponse(
@@ -49,28 +47,12 @@ public class LoyaltyService {
             )
     })
     @Tag(name = "Loyalty Program Service")
-    @GET
     public Response listLoyaltyMembers() {
-        //TODO: implement server error logic, implement database request
-
-        // Logic to list all loyalty members
-
-        // List<LoyaltyMember> members = getAllLoyaltyMembers();
-        User mica = new User(1, "Mica", "mica@mejl", "99");
-        User pera = new User(2, "Pera", "pera@mejl", "109");
-        LoyaltyMember member = new LoyaltyMember(1, mica, 99);
-        LoyaltyMember member2 = new LoyaltyMember(2, pera, 109);
-
-        List<LoyaltyMember> loyaltyMemberList = new ArrayList<LoyaltyMember>(){{
-            add(member);
-            add(member2);
-        }};
-        return Response.ok(loyaltyMemberList).build();
+        return Response.ok(loyaltyServiceApiBean.listLoyaltyMembers()).build();
     }
 
     @POST
     @Operation(summary = "Enroll a user in the loyalty program", description = "Add a user to the loyalty program.")
-    //@Consumes(MediaType.APPLICATION_JSON)
     @APIResponses({
             @APIResponse(
                     description = "User successfully enrolled",
@@ -87,9 +69,6 @@ public class LoyaltyService {
     })
     @Tag(name = "Loyalty Program Service")
     public Response enrollUser(LoyaltyMember member) {
-        //TODO implement database entries
-        // Logic to enroll user
-
-        return Response.status(Response.Status.CREATED).entity(member).build();
+        return Response.status(Response.Status.CREATED).entity(loyaltyServiceApiBean.enrollUser(member)).build();
     }
 }

@@ -1,10 +1,8 @@
 package com.cloudify.v1.viri;
 
+import com.cloudify.beans.UserServiceApiBean;
 import com.cloudify.entities.LoyaltyMember;
 import com.cloudify.entities.User;
-import com.cloudify.entities.BookingRequest;
-import com.cloudify.entities.Booking;
-import com.cloudify.entities.Passenger;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
@@ -16,11 +14,10 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
 
 @OpenAPIDefinition(
         info = @Info(
@@ -33,6 +30,9 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class UserService {
+
+    @Inject
+    UserServiceApiBean userServiceApiBean;
 
     @GET
     @Operation(summary = "List all users", description = "Retrieve a list of all registered users.")
@@ -49,19 +49,7 @@ public class UserService {
     @Tag(name = "User Service")
     public Response listUsers(@QueryParam("limit") @DefaultValue("100") int limit,
                               @QueryParam("offset") @DefaultValue("0") int offset) {
-        //TODO implement database logic
-        // Logic for retrieving users from database
-        User mica = new User(1, "Mica", "mica@mejl", "99");
-        User pera = new User(2, "Pera", "pera@mejl", "109");
-        LoyaltyMember member = new LoyaltyMember(1, mica, 99);
-        LoyaltyMember member2 = new LoyaltyMember(2, pera, 109);
-
-        List<LoyaltyMember> loyaltyMemberList = new ArrayList<LoyaltyMember>(){{
-            add(member);
-            add(member2);
-        }};
-
-        return Response.ok(loyaltyMemberList).build();
+        return Response.ok(userServiceApiBean.listUsers(limit, offset)).build();
     }
 
     @POST
@@ -82,8 +70,7 @@ public class UserService {
     })
     @Tag(name = "User Service")
     public Response createUser(User user) {
-        // Logic for creating a new user
-        return Response.status(Response.Status.CREATED).entity(user).build();
+        return Response.status(Response.Status.CREATED).entity(userServiceApiBean.createUser(user)).build();
     }
 
     @GET
@@ -106,12 +93,7 @@ public class UserService {
     })
     @Tag(name = "User Service")
     public Response getUser(@PathParam("userId") int userId) {
-        // Logic to fetch user
-        //User user = findUser(userId);
-
-        User mica = new User(1, "Mica", "mica@mejl", "99");
-
-        return Response.ok(mica).build();
+        return Response.ok(userServiceApiBean.getUser(userId)).build();
     }
 
     @PUT
@@ -137,8 +119,7 @@ public class UserService {
     })
     @Tag(name = "User Service")
     public Response updateUser(@PathParam("userId") int userId, User user) {
-        // Logic to update user
-        return Response.ok(user).build();
+        return Response.ok(userServiceApiBean.updateUser(userId, user)).build();
     }
 
     @DELETE
@@ -160,7 +141,7 @@ public class UserService {
     })
     @Tag(name = "User Service")
     public Response deleteUser(@PathParam("userId") int userId) {
-        // Logic to delete user
+        userServiceApiBean.deleteUser(userId);
         return Response.ok().build();
     }
 }
