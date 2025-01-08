@@ -4,10 +4,21 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.io.Serializable;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.GenerationType;
+
+@Entity
+@Table(name = "user")
 @Schema(description = "User details")
 public class User implements Serializable {
 
     @Schema(description = "Unique user identifier", example = "U123456")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
     @Schema(description = "Name of the user", example = "John Doe")

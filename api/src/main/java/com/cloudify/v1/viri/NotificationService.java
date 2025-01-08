@@ -57,7 +57,7 @@ public class NotificationService {
         Notification newNotification = new Notification(
                 notificationId,
                 notificationDetails.getUserId(),
-                /*List<User> notifiedUsers,*/
+                notificationDetails.getNotifiedUsers(),
                 notificationDetails.getTextLength(), notificationDetails.getSendingTime(),
                 notificationDetails.getTitle(),
                 notificationDetails.getContent(),

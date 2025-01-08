@@ -2,6 +2,7 @@ package com.cloudify.v1.viri;
 
 import com.cloudify.entities.BookingRequest;
 import com.cloudify.entities.Booking;
+import com.cloudify.entities.Flight;
 import com.cloudify.entities.Passenger;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -23,6 +24,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 
+//import jakarta.persistence.EntityManager;
+
+
 @OpenAPIDefinition(
         info = @Info(
                 title = "Flight Booking Service",
@@ -34,6 +38,10 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class  FlightBookingService {
+
+
+//    @PersistenceContext(unitName = "cloudify-jpa")
+//    private EntityManager em;
 
     @Operation(description = "Retrieve the details of an existing booking using the bookingId.", summary = "Get an existing booking")
     @APIResponses({
@@ -53,6 +61,11 @@ public class  FlightBookingService {
     public Response getBooking( @Parameter(description = "Unique identifier of the booking", example = "BK987654")
             @PathParam("bookingId") String bookingId) {
         //pridobimo booking iz baze podatkov ako ne postoji vrnemo 404
+
+
+       // return em.createQuery("SELECT f FROM Flight f", Flight.class).getResultList();
+
+
         boolean obstaja = false;
         //Booking booking = bookingDatabase.get(bookingId);
         if (obstaja){//booking == null) {

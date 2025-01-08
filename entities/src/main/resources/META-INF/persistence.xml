@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
     <persistence-unit name="cloudify-jpa" transaction-type="JTA">
-        <jta-data-source>jdbc/cloudifyDS</jta-data-source>
+        <jta-data-source>cloudify</jta-data-source>
+
+        <class> com.cloudify.entities.User</class>
+        <class> com.cloudify.entities.Payment</class>
+        <class> com.cloudify.entities.Notification</class>
+        <class> com.cloudify.entities.Booking</class>
+        <class> com.cloudify.entities.BookingRequest</class>
+        <class> com.cloudify.entities.Flight</class>
+        <class> com.cloudify.entities.Passenger</class>
+        <class> com.cloudify.entities.WeatherDelayPrediction</class>
+        <class> com.cloudify.entities.SeatUpdate</class>
+        <class> com.cloudify.entities.LoyaltyMember</class>
+        <class> com.cloudify.entities.LoyaltyEnrollment</class>
+        <class> com.cloudify.entities.SeatAvailability</class>
+        <class> com.cloudify.entities.FlightStatus</class>
+        <class> com.cloudify.entities.FlightSearchResponse</class>
 
 
         <properties>
-            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
-            <property name="javax.persistence.schema-generation.create-source" value="metadata"/>
-            <property name="javax.persistence.sql-load-script-source" value="../sql-scripts/init-db.sql"/>
-            <property name="javax.persistence.schema-generation.drop-source" value="metadata"/>
+            <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <property name="jakarta.persistence.schema-generation.create-source" value="metadata"/>
+            <property name="jakarta.persistence.sql-load-script-source" value="classpath:sql-scripts/init-db.sql"/>
+            <property name="jakarta.persistence.schema-generation.drop-source" value="metadata"/>
         </properties>
 
     </persistence-unit>

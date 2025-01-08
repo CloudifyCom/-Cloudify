@@ -1,13 +1,13 @@
-INSERT INTO uporabnik (ime, priimek, uporabnisko_ime, email) VALUES ('Petra', 'Kos', 'petrakos', 'petra.kos@hotmail.com');
-INSERT INTO uporabnik (ime, priimek, uporabnisko_ime, email) VALUES ('Miha', 'Novak', 'mihanovak', 'miha.novak@gmail.com');
-INSERT INTO nakupovalni_seznam (naziv, opis, ustvarjen, uporabnik_id) VALUES ('Špecerija', 'Tedenski nakup', '2016-05-28T17:39:44.937', 1);
-INSERT INTO nakupovalni_seznam (naziv, opis, ustvarjen, uporabnik_id) VALUES ('Oprema doma', 'Pohištvo in ostali dodatki', '2016-05-28T17:39:44.937', 2);
-INSERT INTO artikel (naziv, opis, nakupovalni_seznam_id) VALUES ('Mleko', 'Mleko 3,5 %.', 1);
-INSERT INTO artikel (naziv, opis, nakupovalni_seznam_id) VALUES ('Salama', 'Izberi poljubno.', 1);
-INSERT INTO artikel (naziv, opis, nakupovalni_seznam_id) VALUES ('Testenine', 'Polnozrnate.', 1);
-INSERT INTO artikel (naziv, opis, nakupovalni_seznam_id) VALUES ('Nož', 'Nož za kruh.', 2);
-INSERT INTO artikel (naziv, opis, nakupovalni_seznam_id) VALUES ('Škarje', 'Kuhinjske škarje.', 2);
-INSERT INTO oznaka (naslov) VALUES ('Dom');
-INSERT INTO oznaka (naslov) VALUES ('Špecerija');
-INSERT INTO nakupovalni_seznam_oznaka (nakupovalni_seznam_id, oznaka_id) VALUES (1, 1);
-INSERT INTO nakupovalni_seznam_oznaka (nakupovalni_seznam_id, oznaka_id) VALUES (2, 2);
+-- Create the passenger table
+CREATE TABLE IF NOT EXISTS passenger (
+                                         first_name VARCHAR(50),
+                                         last_name VARCHAR(50),
+                                         passport_number VARCHAR(20) UNIQUE PRIMARY KEY
+);
+
+-- passenger
+INSERT INTO passenger (first_name, last_name, passport_number) VALUES ('John', 'Doe', 'P987654321');
+INSERT INTO passenger (first_name, last_name, passport_number) VALUES ('Jane', 'Smith', 'P123456789');
+INSERT INTO passenger (first_name, last_name, passport_number) VALUES ('Alice', 'Johnson', 'P112233445');
+INSERT INTO passenger (first_name, last_name, passport_number) VALUES ('Bob', 'Williams', 'P998877665');
+INSERT INTO passenger (first_name, last_name, passport_number) VALUES ('Charlie', 'Brown', 'P667788990');
