@@ -3,17 +3,22 @@ kumuluzee:
   version: 1.0.0
   env:
     name: dev
-#  datasources:
-#    - jndi-name: jdbc/CloudifyDS
-#      connection-url: jdbc:postgresql://localhost:5432/cloudifydb
-#      username: cloudify_user
-#      password: secure_password
-#      max-pool-size: 20
+  datasources:
+    - jndi-name: cloudify
+      connection-url: jdbc:postgresql://localhost:5432/cloudify
+      username: cloudify
+      password: password
+      database: cloudify
+      max-pool-size: 20
+  logging:
+    levels:
+      com.kumuluz: DEBUG
+      javax.sql: DEBUG
   health:
     checks:
       data-source-health-check:
         type: liveness
-        jndi-name: jdbc/CloudifyDS
+        jndi-name: jdbc/cloudify
   rest-client:
     registrations:
       - class: api-service

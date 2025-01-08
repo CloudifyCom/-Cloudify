@@ -1,21 +1,28 @@
 package com.cloudify.entities;
 
+import jakarta.persistence.*;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.util.List;
 
-
+@Entity
+@Table(name = "booking")
 @Schema(description = "Booking information")
 public class Booking implements Serializable {
 
     @Schema(description = "bookingId", example = "BK987654")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String bookingId;
 
     @Schema(description = "Flight")
+    @OneToOne
+    @JoinColumn(name = "flightId")
     private Flight flight;
 
     @Schema(description = "List<Passenger>")
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     private List<Passenger> passengers;
 
     @Schema(description = "totalPrice", example = "250.50")

@@ -32,6 +32,21 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>jakarta.persistence</groupId>
+                <artifactId>jakarta.persistence-api</artifactId>
+                <version>3.0.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>6.2.13.Final</version> <!-- Use the latest stable version -->
+            </dependency>
+
+
+
             <dependency>
                 <groupId>com.kumuluz.ee</groupId>
                 <artifactId>kumuluzee-bom</artifactId>
@@ -79,6 +94,7 @@
                 <artifactId>kumuluzee-security-keycloak</artifactId>
                 <version>${kumuluzee-security.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.keycloak</groupId>
                 <artifactId>keycloak-jetty94-adapter</artifactId>

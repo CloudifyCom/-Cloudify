@@ -1,14 +1,19 @@
 package com.cloudify.entities;
 
+import jakarta.persistence.*;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "flight")
 @Schema(description = "Flight information")
 public class Flight implements Serializable {
 
     @Schema(description = "Flight identifier", example = "AB1234")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String flightId;
 
     @Schema(description = "airline", example = "Delta Airlines")

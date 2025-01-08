@@ -1,6 +1,8 @@
 package com.cloudify.v1.viri;
+import com.cloudify.beans.PaymentBean;
 import com.cloudify.entities.Flight;
 import com.cloudify.entities.Notification;
+import com.cloudify.entities.Passenger;
 import com.cloudify.entities.Payment;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -10,6 +12,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -25,6 +28,8 @@ import java.util.UUID;
 @Produces(MediaType.APPLICATION_JSON)
 public class PaymentService {
 
+    @Inject
+    PaymentBean paymentBean;
 
     @Operation(description = "Retrieve the details of an existing payment using the paymentId.", summary = "Get payment details")
     @APIResponses({
@@ -35,10 +40,10 @@ public class PaymentService {
     @GET
     @Path("/{paymentId}")
     public Response getPayment(@PathParam("paymentId") String paymentId) {
-        // Pridobimo payment iz baze podatkov
-        //Payment payment = paymentDatabase.get(paymentId);
-        String payment = "objekat";
-        if (payment == null) {
+
+        Passenger payment = paymentBean.getPayment(paymentId);
+        //Payment payment = paymentBean.getPayment(paymentId);
+        if(payment == null) {
             return Response.status(404).build();
         }
         return Response.ok(payment).build();
@@ -54,24 +59,15 @@ public class PaymentService {
     @Tag(name = "Payment Service")
     @POST
     public Response makePayment(Payment paymentDetails) {
+        
+        if(paymentDetails == null) {
+            return Response.status(404).build();
+        }
 
-        //TO DO Sa Userom
-
-        String paymentId = UUID.randomUUID().toString();
-        Payment payment = new Payment(
-                paymentId,
-                paymentDetails.getDate(),
-                paymentDetails.getUserId(),
-                /*User sender,*/
-                paymentDetails.getPaymentStatus(),
-                paymentDetails.getAmount(),
-                paymentDetails.getCurrency(),
-                paymentDetails.getFlightId(),
-                paymentDetails.getTransactionId());
-
-
-
-        //paymentDatabase.put(payment.getId(), payment);
+        Payment payment = paymentBean.postPayment(paymentDetails);
+        if(payment == null) {
+            return Response.status(422).build();
+        }
         return Response.status(201).entity(payment).build();
     }
 

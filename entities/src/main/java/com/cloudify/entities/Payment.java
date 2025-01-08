@@ -1,14 +1,28 @@
 package com.cloudify.entities;
 
+import jakarta.persistence.*;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+
+import org.hibernate.annotations.NamedQueries;
+
+
+import org.hibernate.annotations.NamedQuery;
+
+
+@Entity
+@Table(name = "payment")
 @Schema(description = "Payment information")
 public class Payment implements Serializable {
 
+
     @Schema(description = "paymentId", example = "123456789")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String paymentId;
 
     @Schema(description = "date", example = "2024-11-25T14:30:00")
@@ -17,8 +31,11 @@ public class Payment implements Serializable {
     @Schema(description = "userId", example = "198772")
     private Long userId;
 
-    //@Schema(description = "sender")
-    //private User sender;
+
+    @Schema(description = "sender")
+    @OneToOne
+    @JoinColumn(name = "userId")
+    private User sender;
 
     @Schema(description = "paymentStatus", example = "ACCEPTED")
     private String paymentStatus;
@@ -38,11 +55,11 @@ public class Payment implements Serializable {
     public Payment() {}
 
     // Parameterized constructor
-    public Payment(String paymentId, LocalDateTime date, Long userId, /*User sender,*/ String paymentStatus, double amount, String currency, String flightId, String transactionId) {
+    public Payment(String paymentId, LocalDateTime date, Long userId, User sender, String paymentStatus, double amount, String currency, String flightId, String transactionId) {
         this.paymentId = paymentId;
         this.date = date;
         this.userId = userId;
-        //this.sender = sender;
+        this.sender = sender;
         this.paymentStatus = paymentStatus;
         this.amount = amount;
         this.currency = currency;
@@ -112,5 +129,13 @@ public class Payment implements Serializable {
 
     public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
+    }
+
+    public User getSender() {
+        return sender;
+    }
+
+    public void setSender(User sender) {
+        this.sender = sender;
     }
 }

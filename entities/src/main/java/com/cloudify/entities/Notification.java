@@ -1,22 +1,28 @@
 package com.cloudify.entities;
 
+import jakarta.persistence.*;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Entity
+@Table(name = "notification")
 @Schema(description = "Notification information")
 public class Notification implements Serializable {
 
     @Schema(description = "notificationId", example = "1")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String notificationId;
 
     @Schema(description = "userId", example = "198772")
     private String userId;
 
-    //@Schema(description = "notifiedUsers")
-    //private List<User> notifiedUsers;
+    @Schema(description = "notifiedUsers")
+    @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL)
+    private List<User> notifiedUsers;
 
     @Schema(description = "textLength", example = "70")
     private Integer textLength;
@@ -36,10 +42,10 @@ public class Notification implements Serializable {
 
     public Notification() {}
 
-    public Notification(String notificationId, String userId, /*List<User> notifiedUsers,*/ Integer textLength, LocalDateTime sendingTime, String title, String content, String notificationType) {
+    public Notification(String notificationId, String userId, List<User> notifiedUsers, Integer textLength, LocalDateTime sendingTime, String title, String content, String notificationType) {
         this.notificationId = notificationId;
         this.userId = userId;
-        //this.notifiedUsers = notifiedUsers;
+        this.notifiedUsers = notifiedUsers;
         this.textLength = textLength;
         this.sendingTime = sendingTime;
         this.title = title;
@@ -108,5 +114,13 @@ public class Notification implements Serializable {
 
     public void setNotificationType(String notificationType) {
         this.notificationType = notificationType;
+    }
+
+    public List<User> getNotifiedUsers() {
+        return notifiedUsers;
+    }
+
+    public void setNotifiedUsers(List<User> notifiedUsers) {
+        this.notifiedUsers = notifiedUsers;
     }
 }

@@ -2,6 +2,7 @@ package com.cloudify.v1.viri;
 
 import com.cloudify.entities.BookingRequest;
 import com.cloudify.entities.Booking;
+import com.cloudify.entities.Flight;
 import com.cloudify.entities.Passenger;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -24,6 +25,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+
+//import jakarta.persistence.EntityManager;
 
 
 @OpenAPIDefinition(
@@ -58,6 +62,11 @@ public class  FlightBookingService {
     public Response getBooking( @Parameter(description = "Unique identifier of the booking", example = "BK987654")
             @PathParam("bookingId") String bookingId) {
         //pridobimo booking iz baze podatkov ako ne postoji vrnemo 404
+
+
+       // return em.createQuery("SELECT f FROM Flight f", Flight.class).getResultList();
+
+
         boolean obstaja = false;
         //Booking booking = bookingDatabase.get(bookingId);
         if (obstaja){//booking == null) {
