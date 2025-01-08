@@ -22,6 +22,11 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
 
 @OpenAPIDefinition(
         info = @Info(
@@ -33,7 +38,7 @@ import javax.ws.rs.core.Response;
 @Path("/flights")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class InventoryService {
+public class InventoryService implements HealthCheck{
 
     @GET
     @Operation(summary = "Get a list of available flights", description = "Retrieve available flights based on origin, destination, and date range.")
@@ -178,5 +183,57 @@ public class InventoryService {
         } catch (Exception e) {
             return Response.status(500).entity("Internal server error").build();
         }
+    }
+
+    @GET
+    @Path("/{flightId}/seats/health")
+    @Operation(summary = "Health check for Inventory Service", description = "Check if the inventory service is working correctly")
+    @APIResponses({
+            @APIResponse(description = "Inventory Service is healthy", responseCode = "200"),
+            @APIResponse(description = "Inventory Service is unhealthy", responseCode = "503")
+    })
+    @Tag(name = "Inventory Service")
+    public Response healthCheck(@Parameter(description = "Unique identifier of the flight", required = true, example = "ABC123")
+                                    @PathParam("flightId") String flightId) {
+        HealthCheckResponse healthCheckResponse = performHealthCheck(flightId);
+
+        if (healthCheckResponse.getState() == HealthCheckResponse.State.UP) {
+            return Response.ok("Inventory Service is healthy.").build();
+        } else {
+            return Response.status(Response.Status.SERVICE_UNAVAILABLE)
+                    .entity("Inventory Service is unhealthy.").build();
+        }
+    }
+
+    private HealthCheckResponse performHealthCheck(String flightId) {
+        try {
+            String urlString = "http://localhost:8080/v1/flights/" + flightId + "/seats";
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                return HealthCheckResponse.named("Inventory Health Check")
+                        .state(true)  // Pass `true` for UP
+                        .build();
+            } else {
+                return HealthCheckResponse.named("Inventory Health Check")
+                        .state(false)  // Pass `false` for DOWN
+                        .build();
+            }
+        } catch (Exception e) {
+            return HealthCheckResponse.named("Inventory Health Check")
+                    .state(false)  // Pass `false` for DOWN
+                    .build();
+        }
+    }
+
+    @Override
+    public HealthCheckResponse call() {
+        return performHealthCheck("defaultFlightId");
     }
 }

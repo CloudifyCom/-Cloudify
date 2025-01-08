@@ -19,8 +19,15 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
 
 @OpenAPIDefinition(
         info = @Info(
@@ -32,7 +39,7 @@ import java.util.List;
 @Path("/loyalty")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class LoyaltyService {
+public class LoyaltyService implements HealthCheck{
 
 
     @Operation(summary = "List all loyalty members", description = "Retrieve all users enrolled in the loyalty program.")
@@ -92,4 +99,57 @@ public class LoyaltyService {
 
         return Response.status(Response.Status.CREATED).entity(member).build();
     }
+
+    @GET
+    @Path("/health")
+    @Operation(summary = "Health check for Loyalty Service", description = "Check if the Loyalty Service is working correctly")
+    @APIResponses({
+            @APIResponse(description = "Loyalty Service is healthy", responseCode = "200"),
+            @APIResponse(description = "Loyalty Service is unhealthy", responseCode = "503")
+    })
+    @Tag(name = "Loyalty Program Service")
+    public Response healthCheck() {
+        HealthCheckResponse healthCheckResponse = performHealthCheck();
+
+        if (healthCheckResponse.getState() == HealthCheckResponse.State.UP) {
+            return Response.ok("Loyalty Service is healthy.").build();
+        } else {
+            return Response.status(Response.Status.SERVICE_UNAVAILABLE)
+                    .entity("Loyalty Service is unhealthy.").build();
+        }
+    }
+
+    private HealthCheckResponse performHealthCheck() {
+        try {
+            // Check the /loyalty endpoint
+            String urlString = "http://localhost:8080/v1/loyalty";
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                return HealthCheckResponse.named("Loyalty Service Health Check")
+                        .state(true)  // UP
+                        .build();
+            } else {
+                return HealthCheckResponse.named("Loyalty Service Health Check")
+                        .state(false)  // DOWN
+                        .build();
+            }
+        } catch (IOException e) {
+            return HealthCheckResponse.named("Loyalty Service Health Check")
+                    .state(false)  // DOWN
+                    .build();
+        }
+    }
+
+    @Override
+    public HealthCheckResponse call() {
+        return performHealthCheck();
+    }
+
 }

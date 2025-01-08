@@ -5,6 +5,7 @@ import com.cloudify.entities.Booking;
 import com.cloudify.entities.FlightSearchResponse;
 import com.cloudify.entities.Flight;
 import com.cloudify.entities.Passenger;
+import org.eclipse.jetty.webapp.MetaData;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
@@ -15,6 +16,8 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +32,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import static org.eclipse.jetty.webapp.MetaData.Complete.False;
 
 @OpenAPIDefinition(
         info = @Info(
@@ -144,7 +149,71 @@ public class FlightSearchService {
         flightsDatabase.add(flight6);
     }
 
+    @Operation(description = "Health check for Flight Search Service.", summary = "Check if flights search is working correctly")
+    @Path("health/search")
+    @GET
+    public Response healthCheck(
+            @QueryParam("origin") String origin,
+            @QueryParam("destination") String destination,
+            @QueryParam("departureDate") String departureDate,
+            @QueryParam("availableSeats") Integer availableSeats,
+            @QueryParam("travelClass") String travelClass) {
 
+        try {
+
+            boolean isFlightAvailable = false;
+            for (FlightSearchResponse.Flight flight : flightsDatabase) {
+                boolean isMatching = flight.getOrigin().equalsIgnoreCase(origin)
+                        && flight.getDestination().equalsIgnoreCase(destination)
+                        && flight.getDepartureDate().equals(departureDate)
+                        && flight.getAvailableSeats() >= availableSeats
+                        && (travelClass == null || flight.getTravelClass().equalsIgnoreCase(travelClass));
+
+                if (isMatching) {
+                    isFlightAvailable = true;
+                }
+            }
+
+            boolean isLinkAvailable = checkFlightSearchLink();
+
+            if (isFlightAvailable && isLinkAvailable) {
+                return Response.ok("Flight search service is healthy! Both the flight availability and the link are working correctly.").build();
+            } else {
+                String errorMessage = "Flight search service is unhealthy. ";
+                if (!isFlightAvailable) {
+                    errorMessage += "No matching flights found. ";
+                }
+                if (!isLinkAvailable) {
+                    errorMessage += "Flight search link is not responding. ";
+                }
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(errorMessage).build();
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error during health check: " + e.getMessage()).build();
+        }
+    }
+
+    private boolean checkFlightSearchLink() {
+        try {
+            String urlString = "http://localhost:8080/v1/flights/search";
+
+            URL url = new URL(urlString);
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+
+            int responseCode = connection.getResponseCode();
+
+            return responseCode == HttpURLConnection.HTTP_OK;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     @Operation(description = "Retrieve available flights based on origin, destination, and date.", summary = "Search flights")
     @APIResponses({

@@ -26,6 +26,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 @OpenAPIDefinition(
         info = @Info(
                 title = "Flight Status Service",
@@ -154,6 +157,68 @@ public class FlightStatusService {
         FlightStatus flightStatus = flightStatusResponseBean.vrniflightStatus(flightId, flightsDatabase);
 
         return Response.ok(flightStatus).build();
+    }
+
+    // Health Check Method
+    @Operation(description = "Health check for Flight Status Service.", summary = "Check if the flight status service is working correctly")
+    @APIResponses({
+            @APIResponse(description = "Flight Status Service is healthy", responseCode = "200"),
+            @APIResponse(description = "Flight Status Service is unhealthy", responseCode = "503")
+    })
+    @Path("/health")
+    @GET
+    public Response healthCheck(
+            @Parameter(description = "Unique identifier for the flight", required = true, example = "AB1234")
+            @PathParam("flightId") String flightId) {
+
+        try {
+            FlightStatus flightStatus = null;
+
+            for(FlightSearchResponse.Flight flight : flightsDatabase) {
+                if(flight.getFlightId().equals(flightId)) {
+                    flightStatus = flightStatusResponseBean.vrniflightStatus(flightId, flightsDatabase);
+                }
+            }
+
+            boolean isLinkAvailable = checkFlightStatusLink(flightId);
+
+
+            if (flightStatus != null && isLinkAvailable) {
+                return Response.ok("Flight Status Service is healthy. Both the flight status and the link are working correctly.").build();
+            } else {
+                String errorMessage = "Flight Status Service is unhealthy. ";
+                if (flightStatus == null) {
+                    errorMessage += "Flight status not found for " + flightId + ". ";
+                }
+                if (!isLinkAvailable) {
+                    errorMessage += "Flight status link is not responding. ";
+                }
+                return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(errorMessage).build();
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error during health check: " + e.getMessage()).build();
+        }
+    }
+
+    private boolean checkFlightStatusLink(String flightId) {
+        try {
+            String urlString = "http://localhost:8080/v1/flights/" + flightId + "/status";
+
+            URL url = new URL(urlString);
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+
+            int responseCode = connection.getResponseCode();
+
+            return responseCode == HttpURLConnection.HTTP_OK;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

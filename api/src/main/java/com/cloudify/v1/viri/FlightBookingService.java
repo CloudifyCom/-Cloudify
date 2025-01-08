@@ -16,6 +16,9 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.*;
@@ -34,6 +37,8 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class  FlightBookingService {
+
+    private static final Logger LOG = Logger.getLogger(FlightBookingService.class.getSimpleName());
 
     @Operation(description = "Retrieve the details of an existing booking using the bookingId.", summary = "Get an existing booking")
     @APIResponses({
@@ -135,5 +140,44 @@ public class  FlightBookingService {
 //
 //        bookingDatabase.remove(bookingId);
         return Response.ok().build();
+    }
+
+    @Operation(description = "Health check endpoint to verify the service is running.", summary = "Health Check")
+    @APIResponses({
+            @APIResponse(description = "Service is healthy!", responseCode = "200"),
+            @APIResponse(description = "Service is unavailable!", responseCode = "503")
+    })
+    @Tag(name = "Flight Booking Service")
+    @GET
+    @Path("/{bookingId}/health")
+    public Response healthCheck(@PathParam("bookingId") String bookingId) {
+
+        String targetUrl = "http://localhost:8080/v1/bookings/" + bookingId;
+
+        boolean isHealthy = checkUrl(targetUrl);
+
+        if (isHealthy) {
+            return Response.ok("Service is running and healthy!").build();
+        } else {
+            return Response.status(503).entity("Service is unavailable!").build();
+        }
+    }
+
+    private boolean checkUrl(String targetUrl) {
+        try {
+            URL url = new URL(targetUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                return true;
+            }
+        } catch (Exception e) {
+            LOG.severe("Health check failed for URL: " + targetUrl + " - " + e.getMessage());
+        }
+        return false;
     }
 }
