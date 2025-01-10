@@ -6,12 +6,14 @@ import com.cloudify.entities.Payment;
 import java.util.UUID;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class PaymentBean {
 
+    @PersistenceContext(unitName = "cloudify-jpa")
     private EntityManager em;
 
     public Passenger getPayment(String paymentId) {
