@@ -44,7 +44,6 @@ jobs:
       # 7) Set up kubectl CLI
       - name: Install kubectl
         run: |
-          sudo az repo update  # Just in case azure CLI is needed, or skip if not needed
           sudo apt-get update
           sudo apt-get install -y kubectl
 
