@@ -34,7 +34,7 @@ jobs:
       # 5) Build Docker image
       - name: Build Docker Image
         run: |
-          docker build -t CloudifyRegistry.azurecr.io/Cloudify:latest .
+          docker build -t CloudifyRegistry.azurecr.io/cloudify:latest .
 
       # 6) Push Docker image to ACR
       - name: Push Docker Image
