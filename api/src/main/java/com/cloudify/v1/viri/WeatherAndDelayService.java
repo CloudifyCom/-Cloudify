@@ -188,4 +188,28 @@ public class WeatherAndDelayService {
 
         return Math.min(1.0, probability);
     }
+
+    @Operation(description = "Health check to verify if the weather service link is working.", summary = "Health Check")
+    @APIResponses({
+            @APIResponse(description = "Weather service is healthy", responseCode = "200"),
+            @APIResponse(description = "Weather service is down", responseCode = "500")
+    })
+    @Tag(name = "Weather and Delay Prediction Service")
+    @GET
+    @Path("/health")
+    public Response healthCheck(@PathParam("flightId") String flightId) {
+        try {
+            String[] flightData = FLIGHT_DATABASE.get(flightId);
+            if (flightData == null) {
+                return Response.status(404).entity("Weather service is unhealthy because ID is not valid").build();
+            }
+
+            String origin = flightData[0];
+            WeatherDelayPrediction originPrediction = getWeatherData(origin, flightId);
+
+            return Response.status(200).entity("Weather service is healthy").build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Weather service is down: " + e.getMessage()).build();
+        }
+    }
 }
