@@ -19,6 +19,11 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.logging.Logger;
+
 @OpenAPIDefinition(
         info = @Info(
                 title = "User Service",
@@ -33,6 +38,9 @@ public class UserService {
 
     @Inject
     UserServiceApiBean userServiceApiBean;
+
+    private static final Logger LOG = Logger.getLogger(UserService.class.getSimpleName());
+
 
     @GET
     @Operation(summary = "List all users", description = "Retrieve a list of all registered users.")
@@ -143,5 +151,63 @@ public class UserService {
     public Response deleteUser(@PathParam("userId") int userId) {
         userServiceApiBean.deleteUser(userId);
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("/health")
+    @Operation(summary = "Global Health Check", description = "Check if the /users endpoint is working.")
+    @APIResponses({
+            @APIResponse(description = "Service is healthy!", responseCode = "200"),
+            @APIResponse(description = "Service is unavailable!", responseCode = "503")
+    })
+    @Tag(name = "User Service")
+    public Response healthCheck() {
+        String targetUrl = "http://localhost:8080/v1/users";
+
+        if (checkUrl(targetUrl)) {
+            return Response.ok("Service is healthy!").build();
+        } else {
+            return Response.status(503).entity("Service is unavailable!").build();
+        }
+    }
+
+    @GET
+    @Path("/{userId}/health")
+    @Operation(summary = "Health Check for specific user", description = "Check if the /users/{userId} endpoint is working and the user exists.")
+    @APIResponses({
+            @APIResponse(description = "User service is healthy!", responseCode = "200"),
+            @APIResponse(description = "User not found!", responseCode = "404"),
+            @APIResponse(description = "Service is unavailable!", responseCode = "503")
+    })
+    @Tag(name = "User Service")
+    public Response healthCheckUser(@PathParam("userId") int userId) {
+        String targetUrl = "http://localhost:8080/v1/users/" + userId;
+
+        if (!checkUrl(targetUrl)) {
+            return Response.status(503).entity("Service is unavailable!").build();
+        }
+
+        User user = userServiceApiBean.getUser(userId);
+        if (user != null) {
+            return Response.ok("User service for user " + userId + " is healthy!").build();
+        } else {
+            return Response.status(404).entity("User " + userId + " not found!").build();
+        }
+    }
+
+    private boolean checkUrl(String targetUrl) {
+        try {
+            URL url = new URL(targetUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+
+            int responseCode = connection.getResponseCode();
+            return responseCode == HttpURLConnection.HTTP_OK;
+        } catch (Exception e) {
+            LOG.severe("Health check failed for URL: " + targetUrl + " - " + e.getMessage());
+        }
+        return false;
     }
 }

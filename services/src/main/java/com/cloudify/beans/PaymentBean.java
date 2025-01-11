@@ -13,7 +13,7 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class PaymentBean {
 
-    @PersistenceContext(unitName = "filme-jpa")
+    @PersistenceContext(unitName = "cloudify-jpa")
     private EntityManager em;
 
     public Passenger getPayment(String paymentId) {

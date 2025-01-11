@@ -7,8 +7,14 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import java.net.HttpURLConnection;
 import java.time.LocalDateTime;
+
+import java.net.URL;
+import java.util.logging.Logger;
 import java.util.UUID;
+import javax.inject.Inject;
+import com.cloudify.beans.NotificationBean;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.*;
@@ -20,6 +26,11 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class NotificationService {
+
+    @Inject
+    NotificationBean notificationBean;
+
+    private static final Logger LOG = Logger.getLogger(NotificationService.class.getSimpleName());
 
     // Pridobi obstoječe obvestilo
     @Operation(description = "Retrieve the details of a specific notification.", summary = "Get an existing notification")
@@ -62,6 +73,12 @@ public class NotificationService {
                 notificationDetails.getTitle(),
                 notificationDetails.getContent(),
                 notificationDetails.getNotificationType());
+
+        notificationBean.sendEmail(
+                "ilijagavrilovic03@gmail.com",
+                "New Notification",
+                "Flight is cancelled due to bad weather"
+        );
 
         return Response.status(201).entity(newNotification).build();
     }
@@ -118,4 +135,43 @@ public class NotificationService {
 //        bookingDatabase.remove(bookingId);
         return Response.ok().build();
     }
+
+    @Operation(description = "Health check endpoint to verify the service for a specific notification is running.", summary = "Health Check for Notification ID")
+    @APIResponses({
+            @APIResponse(description = "Service for notification is healthy!", responseCode = "200"),
+            @APIResponse(description = "Service for notification is unavailable!", responseCode = "503")
+    })
+    @Tag(name = "Notification Service")
+    @GET
+    @Path("/{notificationId}/health")
+    public Response healthCheck(@PathParam("notificationId") String notificationId) {
+        String targetUrl = "http://localhost:8080/v1/notifications/" + notificationId;
+
+        boolean isHealthy = checkUrl(targetUrl);
+
+        if (isHealthy) {
+            return Response.ok("Service for notification " + notificationId + " is running and healthy!").build();
+        } else {
+            return Response.status(503).entity("Service for notification " + notificationId + " is unavailable!").build();
+        }
+    }
+
+    private boolean checkUrl(String targetUrl) {
+        try {
+            URL url = new URL(targetUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                return true;
+            }
+        } catch (Exception e) {
+            LOG.severe("Health check failed for URL: " + targetUrl + " - " + e.getMessage());
+        }
+        return false;
+    }
+
 }

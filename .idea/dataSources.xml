@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="cloudify@localhost" uuid="20881033-0a4b-46e2-bff3-af865206545e">
+    <data-source source="LOCAL" name="cloudify@localhost" uuid="a9aa683e-8983-41c3-b042-272b75975854">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>

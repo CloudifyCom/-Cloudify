@@ -26,6 +26,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.cloudify.beans.FlightBookingBean;
+import javax.inject.Inject;
+
 
 //import jakarta.persistence.EntityManager;
 
@@ -41,6 +44,9 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class  FlightBookingService {
+
+    @Inject
+    FlightBookingBean flightBookingBean;
 
     private static final Logger LOG = Logger.getLogger(FlightBookingService.class.getSimpleName());
 
@@ -118,20 +124,7 @@ public class  FlightBookingService {
     public Response updateBooking(@PathParam("bookingId") String bookingId, BookingRequest updatedBooking) {
         // Posodobimo booking ako postoji v bazi podatkov
         //Booking existingBooking = bookingDatabase.get(bookingId);
-        Booking existingBooking = null;
-        if (existingBooking == null) {
-            return Response.status(404).build();
-        }
-
-        List<Passenger> newList = existingBooking.getPassengers();
-        newList.add(updatedBooking.getPassenger());
-        existingBooking.setPassengers(newList);
-
-        double totalPrice = existingBooking.getTotalPrice();
-        totalPrice = totalPrice + updatedBooking.getPaymentMethod().getAmount();
-        existingBooking.setTotalPrice(totalPrice);
-
-        return Response.ok(existingBooking).build();
+        return flightBookingBean.updateBooking(updatedBooking);
     }
 
     @Operation(description = "Delete an existing booking using the bookingId.", summary = "Cancel a booking")

@@ -6,9 +6,19 @@ import com.cloudify.entities.User;
 import javax.enterprise.context.ApplicationScoped;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class UserServiceApiBean {
+
+    //DELETE IT LATER, DONT NEED IT
+    private List<User> users = new ArrayList<>();
+
+    public UserServiceApiBean() {
+        // Adding some example users for testing
+        users.add(new User(1, "Mica", "mica@mejl", "99"));
+        users.add(new User(2, "Pera", "pera@mejl", "109"));
+    }
 
     public List<LoyaltyMember> listUsers(int limit, int offset) {
         // Example mock data (replace with actual database logic)
@@ -30,7 +40,11 @@ public class UserServiceApiBean {
 
     public User getUser(int userId) {
         // Example mock data (replace with actual database logic)
-        return new User(1, "Mica", "mica@mejl", "99");
+        Optional<User> user = users.stream()
+                .filter(u -> u.getUserId() == userId)
+                .findFirst();
+
+        return user.orElse(null);
     }
 
     public User updateUser(int userId, User user) {

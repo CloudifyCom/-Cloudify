@@ -22,6 +22,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.logging.Logger;
+
 @ApplicationScoped
 @Path("/payments")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -30,6 +34,9 @@ public class PaymentService {
 
     @Inject
     PaymentBean paymentBean;
+
+    private static final Logger LOG = Logger.getLogger(PaymentService.class.getSimpleName());
+
 
     @Operation(description = "Retrieve the details of an existing payment using the paymentId.", summary = "Get payment details")
     @APIResponses({
@@ -101,5 +108,43 @@ public class PaymentService {
         } else {
             return Response.status(404).build();
         }
+    }
+
+    @Operation(description = "Health check endpoint to verify the service for a specific payment is running.", summary = "Health Check for Payment ID")
+    @APIResponses({
+            @APIResponse(description = "Service for payment is healthy!", responseCode = "200"),
+            @APIResponse(description = "Service for payment is unavailable!", responseCode = "503")
+    })
+    @Tag(name = "Payment Service")
+    @GET
+    @Path("/{paymentId}/health")
+    public Response healthCheck(@PathParam("paymentId") String paymentId) {
+        String targetUrl = "http://localhost:8080/v1/payments/" + paymentId;
+
+        boolean isHealthy = checkUrl(targetUrl);
+
+        if (isHealthy) {
+            return Response.ok("Service for payment " + paymentId + " is running and healthy!").build();
+        } else {
+            return Response.status(503).entity("Service for payment " + paymentId + " is unavailable!").build();
+        }
+    }
+
+    private boolean checkUrl(String targetUrl) {
+        try {
+            URL url = new URL(targetUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                return true;
+            }
+        } catch (Exception e) {
+            LOG.severe("Health check failed for URL: " + targetUrl + " - " + e.getMessage());
+        }
+        return false;
     }
 }

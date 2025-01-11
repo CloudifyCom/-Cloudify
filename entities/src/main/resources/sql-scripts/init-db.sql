@@ -1,10 +1,10 @@
 -- Create the passenger table
 -- 1. Create Tables
-CREATE TABLE "User" (
-                        userId SERIAL PRIMARY KEY,
-                        name VARCHAR(255) NOT NULL,
-                        email VARCHAR(255) NOT NULL,
-                        phoneNumber VARCHAR(20) NOT NULL
+CREATE TABLE User (
+                      userId SERIAL PRIMARY KEY,
+                      name VARCHAR(255) NOT NULL,
+                      email VARCHAR(255) NOT NULL,
+                      phoneNumber VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE Flight (
@@ -42,7 +42,7 @@ CREATE TABLE BookingPassengers (
 CREATE TABLE Payment (
                          paymentId SERIAL PRIMARY KEY,
                          date TIMESTAMP NOT NULL,
-                         userId INTEGER REFERENCES "User"(userId),
+                         userId INTEGER REFERENCES User(userId),
                          paymentStatus VARCHAR(50) NOT NULL,
                          amount FLOAT NOT NULL,
                          currency VARCHAR(10) NOT NULL,
@@ -52,13 +52,13 @@ CREATE TABLE Payment (
 
 CREATE TABLE LoyaltyMember (
                                memberId SERIAL PRIMARY KEY,
-                               userId INTEGER REFERENCES "User"(userId),
+                               userId INTEGER REFERENCES User(userId),
                                points INTEGER NOT NULL
 );
 
 CREATE TABLE Notification (
                               notificationId SERIAL PRIMARY KEY,
-                              userId INTEGER REFERENCES "User"(userId),
+                              userId INTEGER REFERENCES User(userId),
                               title VARCHAR(255) NOT NULL,
                               content TEXT NOT NULL,
                               sendingTime TIMESTAMP NOT NULL,
@@ -86,12 +86,12 @@ CREATE TABLE WeatherDelayPrediction (
 
 -- 2. Insert Sample Data
 -- User Table
-INSERT INTO "User" (name, email, phoneNumber) VALUES
-                                                  ('John Doe', 'john.doe@example.com', '+1234567890'),
-                                                  ('Jane Smith', 'jane.smith@example.com', '+0987654321'),
-                                                  ('Alice Johnson', 'alice.j@example.com', '+1122334455'),
-                                                  ('Bob Brown', 'bob.brown@example.com', '+2233445566'),
-                                                  ('Eve White', 'eve.white@example.com', '+3344556677');
+INSERT INTO User (name, email, phoneNumber) VALUES
+                                                ('John Doe', 'john.doe@example.com', '+1234567890'),
+                                                ('Jane Smith', 'jane.smith@example.com', '+0987654321'),
+                                                ('Alice Johnson', 'alice.j@example.com', '+1122334455'),
+                                                ('Bob Brown', 'bob.brown@example.com', '+2233445566'),
+                                                ('Eve White', 'eve.white@example.com', '+3344556677');
 
 -- Flight Table
 INSERT INTO Flight (flightId, airline, origin, destination, departureTime, arrivalTime, price, duration, maxSeats, travelClass) VALUES
