@@ -62,7 +62,16 @@ public class InventoryService implements HealthCheck{
                                 @QueryParam("destination") String destination,
                                 @QueryParam("departureDate") String departureDate,
                                 @QueryParam("returnDate") String returnDate) {
-        return Response.ok(inventoryServiceApiBean.listFlights(origin, destination, departureDate, returnDate)).build();
+
+        Response.ResponseBuilder responseBuilder = Response.ok(inventoryServiceApiBean.listFlights(origin, destination, departureDate, returnDate));
+
+        // Add CORS headers
+        responseBuilder.header("Access-Control-Allow-Origin", "http://localhost:4200");
+        responseBuilder.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        responseBuilder.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+        // Return the response
+        return responseBuilder.build();
     }
 
     @POST

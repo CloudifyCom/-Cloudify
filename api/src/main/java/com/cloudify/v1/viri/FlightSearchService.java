@@ -154,6 +154,19 @@ public class FlightSearchService {
         flight7.setFlightDuration(225);
         flight7.setArrivalTime(flight7.getDepartureTime().plusMinutes(flight7.getFlightDuration()));
 
+        FlightSearchResponse.Flight flight8 = new FlightSearchResponse.Flight();
+        flight8.setFlightId("54");
+        flight8.setOrigin("Moscow");
+        flight8.setDestination("Vladivostok");
+        flight8.setDepartureDate("2025-11-22");
+        flight8.setDepartureTime(LocalDateTime.parse("2025-11-22 20:30", formatter));
+        flight8.setAvailableSeats(150);
+        flight8.setTravelClass("business");
+        flight8.setPrice(680.99);
+        flight8.setAirline("Russian Airlines");
+        flight8.setFlightDuration(225);
+        flight8.setArrivalTime(flight8.getDepartureTime().plusMinutes(flight8.getFlightDuration()));
+
         // Adding flights to the "database"
         flightsDatabase.add(flight1);
         flightsDatabase.add(flight2);
@@ -162,6 +175,7 @@ public class FlightSearchService {
         flightsDatabase.add(flight5);
         flightsDatabase.add(flight6);
         flightsDatabase.add(flight7);
+        flightsDatabase.add(flight8);
     }
 
     @Operation(description = "Health check for Flight Search Service.", summary = "Check if flights search is working correctly")

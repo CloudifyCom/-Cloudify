@@ -80,6 +80,13 @@ public class WeatherAndDelayService {
         put("80", new String[]{"Lagos", "Douala"});
 
         put("81", new String[]{"Los Angeles", "Tokyo"});
+        put("CD5679", new String[]{"LAX", "ORD"});
+        put("AB1234", new String[]{"LAX", "JFK"});
+        put("CD5678", new String[]{"LAX", "ORD"});
+        put("EF9101", new String[]{"SFO", "MIA"});
+        put("GH1122", new String[]{"ORD", "ATL"});
+        put("IJ3345", new String[]{"JFK", "LHR"});
+        put("KL5678", new String[]{"LAX", "SYD"});
     }};
 
     @Operation(description = "Predict weather and delays for a flight.", summary = "Predict weather and delays")

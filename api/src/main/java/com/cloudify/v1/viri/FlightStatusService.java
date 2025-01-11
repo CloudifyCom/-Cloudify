@@ -79,6 +79,7 @@ public class FlightStatusService {
         flight2.setFlightDuration(225);
         flight2.setArrivalTime(flight2.getDepartureTime().plusMinutes(flight2.getFlightDuration()));
 
+
         // Flight 3
         FlightSearchResponse.Flight flight3 = new FlightSearchResponse.Flight();
         flight3.setFlightId("EF9101");
@@ -98,8 +99,8 @@ public class FlightStatusService {
         flight4.setFlightId("GH1122");
         flight4.setOrigin("ORD");
         flight4.setDestination("ATL");
-        flight4.setDepartureDate("2024-12-22");
-        flight4.setDepartureTime(LocalDateTime.parse("2024-12-22 22:00", formatter));
+        flight4.setDepartureDate("2024-12-05");
+        flight4.setDepartureTime(LocalDateTime.parse("2024-12-05 16:00", formatter));
         flight4.setAvailableSeats(180);
         flight4.setTravelClass("first");
         flight4.setPrice(999.99);
@@ -112,8 +113,8 @@ public class FlightStatusService {
         flight5.setFlightId("IJ3345");
         flight5.setOrigin("JFK");
         flight5.setDestination("LHR");
-        flight5.setDepartureDate("2024-12-23");
-        flight5.setDepartureTime(LocalDateTime.parse("2024-12-23 11:00", formatter));
+        flight5.setDepartureDate("2024-12-10");
+        flight5.setDepartureTime(LocalDateTime.parse("2024-12-10 11:00", formatter));
         flight5.setAvailableSeats(120);
         flight5.setTravelClass("economy");
         flight5.setPrice(499.99);
@@ -126,8 +127,8 @@ public class FlightStatusService {
         flight6.setFlightId("KL5678");
         flight6.setOrigin("LAX");
         flight6.setDestination("SYD");
-        flight6.setDepartureDate("2024-12-22");
-        flight6.setDepartureTime(LocalDateTime.parse("2024-12-22 23:02", formatter));
+        flight6.setDepartureDate("2024-12-15");
+        flight6.setDepartureTime(LocalDateTime.parse("2024-12-15 20:00", formatter));
         flight6.setAvailableSeats(70);
         flight6.setTravelClass("business");
         flight6.setPrice(1499.99);
@@ -135,12 +136,41 @@ public class FlightStatusService {
         flight6.setFlightDuration(830);
         flight6.setArrivalTime(flight6.getDepartureTime().plusMinutes(flight6.getFlightDuration()));
 
+        FlightSearchResponse.Flight flight7 = new FlightSearchResponse.Flight();
+        flight7.setFlightId("CD5679");
+        flight7.setOrigin("LAX");
+        flight7.setDestination("ORD");
+        flight7.setDepartureDate("2024-11-22");
+        flight7.setDepartureTime(LocalDateTime.parse("2024-11-22 20:30", formatter));
+        flight7.setAvailableSeats(150);
+        flight7.setTravelClass("business");
+        flight7.setPrice(680.99);
+        flight7.setAirline("American Airlines");
+        flight7.setFlightDuration(225);
+        flight7.setArrivalTime(flight7.getDepartureTime().plusMinutes(flight7.getFlightDuration()));
+
+        FlightSearchResponse.Flight flight8 = new FlightSearchResponse.Flight();
+        flight8.setFlightId("54");
+        flight8.setOrigin("Moscow");
+        flight8.setDestination("Vladivostok");
+        flight8.setDepartureDate("2025-11-22");
+        flight8.setDepartureTime(LocalDateTime.parse("2025-11-22 20:30", formatter));
+        flight8.setAvailableSeats(150);
+        flight8.setTravelClass("business");
+        flight8.setPrice(680.99);
+        flight8.setAirline("Russian Airlines");
+        flight8.setFlightDuration(225);
+        flight8.setArrivalTime(flight8.getDepartureTime().plusMinutes(flight8.getFlightDuration()));
+
+        // Adding flights to the "database"
         flightsDatabase.add(flight1);
         flightsDatabase.add(flight2);
         flightsDatabase.add(flight3);
         flightsDatabase.add(flight4);
         flightsDatabase.add(flight5);
         flightsDatabase.add(flight6);
+        flightsDatabase.add(flight7);
+        flightsDatabase.add(flight8);
     }
 
     @Operation(description = "Retrieve the current status of a flight.", summary = "Get flight status")
@@ -154,9 +184,16 @@ public class FlightStatusService {
             @Parameter(description = "Unique identifier for the flight", required = true, example = "AB1234")
             @PathParam("flightId") String flightId) {
 
-        FlightStatus flightStatus = flightStatusResponseBean.vrniflightStatus(flightId, flightsDatabase);
 
-        return Response.ok(flightStatus).build();
+        Response.ResponseBuilder responseBuilder = Response.ok(flightStatusResponseBean.vrniflightStatus(flightId, flightsDatabase));
+
+        // Add CORS headers
+        responseBuilder.header("Access-Control-Allow-Origin", "http://localhost:4200");
+        responseBuilder.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        responseBuilder.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+        // Return the response
+        return responseBuilder.build();
     }
 
     // Health Check Method
