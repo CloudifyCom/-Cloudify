@@ -84,6 +84,7 @@ public class FlightSearchService {
         flight2.setFlightDuration(225);
         flight2.setArrivalTime(flight2.getDepartureTime().plusMinutes(flight2.getFlightDuration()));
 
+
         // Flight 3
         FlightSearchResponse.Flight flight3 = new FlightSearchResponse.Flight();
         flight3.setFlightId("EF9101");
@@ -140,6 +141,19 @@ public class FlightSearchService {
         flight6.setFlightDuration(830);
         flight6.setArrivalTime(flight6.getDepartureTime().plusMinutes(flight6.getFlightDuration()));
 
+        FlightSearchResponse.Flight flight7 = new FlightSearchResponse.Flight();
+        flight7.setFlightId("CD5679");
+        flight7.setOrigin("LAX");
+        flight7.setDestination("ORD");
+        flight7.setDepartureDate("2024-11-22");
+        flight7.setDepartureTime(LocalDateTime.parse("2024-11-22 20:30", formatter));
+        flight7.setAvailableSeats(150);
+        flight7.setTravelClass("business");
+        flight7.setPrice(680.99);
+        flight7.setAirline("American Airlines");
+        flight7.setFlightDuration(225);
+        flight7.setArrivalTime(flight7.getDepartureTime().plusMinutes(flight7.getFlightDuration()));
+
         // Adding flights to the "database"
         flightsDatabase.add(flight1);
         flightsDatabase.add(flight2);
@@ -147,6 +161,7 @@ public class FlightSearchService {
         flightsDatabase.add(flight4);
         flightsDatabase.add(flight5);
         flightsDatabase.add(flight6);
+        flightsDatabase.add(flight7);
     }
 
     @Operation(description = "Health check for Flight Search Service.", summary = "Check if flights search is working correctly")
