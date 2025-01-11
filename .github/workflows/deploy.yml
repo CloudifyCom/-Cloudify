@@ -39,7 +39,7 @@ jobs:
       # 6) Push Docker image to ACR
       - name: Push Docker Image
         run: |
-          docker push CloudifyRegistry.azurecr.io/Cloudify:latest
+          docker push CloudifyRegistry.azurecr.io/cloudify:latest
 
       # 7) Set up kubectl CLI
       - name: Install kubectl
