@@ -6,6 +6,22 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@org.hibernate.annotations.NamedQueries(value =
+        {
+                @org.hibernate.annotations.NamedQuery(
+                        name = "Flight.getFlight",
+                        query = "SELECT p FROM Flight p WHERE p.flightId  = :id"
+                ),
+                @org.hibernate.annotations.NamedQuery(
+                        name = "Flight.deleteFlight",
+                        query = "DELETE FROM Flight p WHERE p.flightId = :id"
+                ),
+                @org.hibernate.annotations.NamedQuery(
+                        name = "Flight.updateFlight",
+                        query = "UPDATE Flight p SET p.departureTime = :departureTime, p.duration = :duration WHERE p.flightId = :id"
+                )
+        }
+)
 @Entity
 @Table(name = "flight")
 @Schema(description = "Flight information")
@@ -14,32 +30,42 @@ public class Flight implements Serializable {
     @Schema(description = "Flight identifier", example = "AB1234")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "flightId")
     private String flightId;
 
+    @Column(name = "airline")
     @Schema(description = "airline", example = "Delta Airlines")
     private String airline;
 
+    @Column(name = "origin")
     @Schema(description = "origin", example = "LAX")
     private String origin;
 
+    @Column(name = "destination")
     @Schema(description = "destination", example = "JFK")
     private String destination;
 
+    @Column(name = "departureTime")
     @Schema(description = "departureTime", example = "2024-11-20T08:00:00Z")
     private LocalDateTime departureTime;
 
+    @Column(name = "arrivalTime")
     @Schema(description = "arrivalTime", example = "2024-11-20T08:00:00Z")
     private LocalDateTime arrivalTime;
 
+    @Column(name = "price")
     @Schema(description = "price", example = "250.50")
     private double price;
 
+    @Column(name = "duration")
     @Schema(description = "duration", example = "PT6H30M")
     private String duration;
 
+    @Column(name = "maxSeats")
     @Schema(description = "maxSeats", example = "20")
     private Integer maxSeats;
 
+    @Column(name = "travelClass")
     @Schema(description = "travelClass", example = "economy")
     private String travelClass;
 

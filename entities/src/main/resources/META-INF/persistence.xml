@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
     <persistence-unit name="cloudify-jpa" transaction-type="JTA">
-        <jta-data-source>cloudify</jta-data-source>
+        <jta-data-source>jdbc/cloudify</jta-data-source>
 
         <class> com.cloudify.entities.User</class>
         <class> com.cloudify.entities.Payment</class>

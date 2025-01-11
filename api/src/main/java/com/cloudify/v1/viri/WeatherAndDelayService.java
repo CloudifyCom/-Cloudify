@@ -49,7 +49,7 @@ public class WeatherAndDelayService {
     //private static final String WEATHER_API_URL = "https://api.weatherapi.com/v1/current.json";
 
     private static final Map<String, String[]> FLIGHT_DATABASE = new HashMap<>() {{
-        put("52", new String[]{"New York", "Los Angeles"});
+        put("AB1234", new String[]{"New York", "Los Angeles"});
         put("53", new String[]{"Los Angeles", "Nome"});
         put("54", new String[]{"Moscow", "Vladivostok"});
         put("55", new String[]{"Reykjavik", "Akureyri"});
