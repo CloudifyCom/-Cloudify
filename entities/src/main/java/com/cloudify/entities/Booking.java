@@ -3,9 +3,26 @@ package com.cloudify.entities;
 import jakarta.persistence.*;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import javax.json.bind.annotation.JsonbTransient;
 import java.io.Serializable;
 import java.util.List;
 
+@org.hibernate.annotations.NamedQueries(value =
+        {
+                @org.hibernate.annotations.NamedQuery(
+                        name = "Booking.getBoking",
+                        query = "SELECT p FROM Booking p WHERE p.bookingId  = :id"
+                ),
+                @org.hibernate.annotations.NamedQuery(
+                        name = "Booking.deleteBoking",
+                        query = "DELETE FROM Booking p WHERE p.bookingId = :id"
+                ),
+                @org.hibernate.annotations.NamedQuery(
+                        name = "Booking.updateBoking",
+                        query = "UPDATE Booking p SET p.passengers = :passengers, p.totalPrice = :totalPrice WHERE p.bookingId = :id"
+                )
+        }
+)
 @Entity
 @Table(name = "booking")
 @Schema(description = "Booking information")
@@ -14,18 +31,22 @@ public class Booking implements Serializable {
     @Schema(description = "bookingId", example = "BK987654")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "bookingId")
     private String bookingId;
 
+    @JsonbTransient
     @Schema(description = "Flight")
     @OneToOne
     @JoinColumn(name = "flightId")
     private Flight flight;
 
+    @JsonbTransient
     @Schema(description = "List<Passenger>")
-    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "bookingpassengers")
     private List<Passenger> passengers;
 
     @Schema(description = "totalPrice", example = "250.50")
+    @Column(name = "totalprice")
     private double totalPrice;
 
     public Booking() {}

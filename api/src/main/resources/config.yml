@@ -4,7 +4,7 @@ kumuluzee:
   env:
     name: dev
   datasources:
-    - jndi-name: cloudify
+    - jndi-name: jdbc/cloudify
       connection-url: jdbc:postgresql://localhost:5432/cloudify
       username: cloudify
       password: password
@@ -14,17 +14,39 @@ kumuluzee:
     levels:
       com.kumuluz: DEBUG
       javax.sql: DEBUG
+
   health:
     checks:
       data-source-health-check:
         type: liveness
         jndi-name: jdbc/cloudify
-  rest-client:
-    registrations:
-      - class: api-service
-        url: http://localhost:8082/v1
-        read-timeout: 5000
-
+      http-health-check-service-1:
+        type: liveness
+        connection-url: http://localhost:8080/v1/bookings/1/health
+      http-health-check-service-2:
+        type: liveness
+        connection-url: http://localhost:8080/v1/flights/health/search
+      http-health-check-service-3:
+        type: liveness
+        connection-url: http://localhost:8080/v1/flights/AB1234/status/health
+      http-health-check-service-4:
+        type: liveness
+        connection-url: http://localhost:8080/v1/flights/AB123/seats/health
+      http-health-check-service-5:
+        type: liveness
+        connection-url: http://localhost:8080/v1/loyalty/health
+      http-health-check-service-6:
+        type: liveness
+        connection-url: http://localhost:8080/v1/notifications/1/health
+      http-health-check-service-7:
+        type: liveness
+        connection-url: http://localhost:8080/v1/payments/AB1234/health
+      http-health-check-service-8:
+        type: liveness
+        connection-url: http://localhost:8080/v1/users/health
+      http-health-check-service-9:
+        type: liveness
+        connection-url: http://localhost:8080/v1/weather-delay-prediction/AB1234/health
   openapi-mp:
     enabled: true
     info:

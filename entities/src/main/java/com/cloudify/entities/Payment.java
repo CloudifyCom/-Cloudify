@@ -13,7 +13,18 @@ import org.hibernate.annotations.NamedQueries;
 
 import org.hibernate.annotations.NamedQuery;
 
-
+@org.hibernate.annotations.NamedQueries(value =
+        {
+                @org.hibernate.annotations.NamedQuery(
+                        name = "Payment.getPayment",
+                        query = "SELECT p FROM Payment p WHERE p.paymentId  = :id"
+                ),
+                @org.hibernate.annotations.NamedQuery(
+                        name = "Payment.deletePayment",
+                        query = "DELETE FROM Payment p WHERE p.paymentId = :id"
+                ),
+        }
+)
 @Entity
 @Table(name = "payment")
 @Schema(description = "Payment information")
@@ -23,8 +34,10 @@ public class Payment implements Serializable {
     @Schema(description = "paymentId", example = "123456789")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "paymentid")
     private String paymentId;
 
+    @Column(name = "date")
     @Schema(description = "date", example = "2024-11-25T14:30:00")
     private LocalDateTime date;
 
@@ -34,21 +47,25 @@ public class Payment implements Serializable {
 
     @Schema(description = "sender")
     @OneToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "userid")
     private User sender;
 
+    @Column(name = "paymentstatus")
     @Schema(description = "paymentStatus", example = "ACCEPTED")
     private String paymentStatus;
 
+    @Column(name = "amount")
     @Schema(description = "amount", example = "100.42")
     private double amount;
 
+    @Column(name = "currency")
     @Schema(description = "currency", example = "USD")
     private String currency;
 
     @Schema(description = "flightId", example = "AB1234")
     private String flightId;
 
+    @Column(name = "transactionId")
     @Schema(description = "transactionId", example = "TX123456789")
     private String transactionId;
 

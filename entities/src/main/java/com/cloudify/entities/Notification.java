@@ -3,10 +3,27 @@ package com.cloudify.entities;
 import jakarta.persistence.*;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import javax.json.bind.annotation.JsonbTransient;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@org.hibernate.annotations.NamedQueries(value =
+        {
+                @org.hibernate.annotations.NamedQuery(
+                        name = "Notification.getNotification",
+                        query = "SELECT p FROM Notification p WHERE p.notificationId  = :id"
+                ),
+                @org.hibernate.annotations.NamedQuery(
+                        name = "Notification.deleteNotification",
+                        query = "DELETE FROM Notification p WHERE p.notificationId = :id"
+                ),
+                @org.hibernate.annotations.NamedQuery(
+                        name = "Notification.updateNotification",
+                        query = "UPDATE Notification p SET p.notificationId = :notificationId, p.content = :content WHERE p.notificationId = :id"
+                )
+        }
+)
 @Entity
 @Table(name = "notification")
 @Schema(description = "Notification information")
@@ -20,6 +37,7 @@ public class Notification implements Serializable {
     @Schema(description = "userId", example = "198772")
     private String userId;
 
+    @JsonbTransient
     @Schema(description = "notifiedUsers")
     @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL)
     private List<User> notifiedUsers;
@@ -27,15 +45,19 @@ public class Notification implements Serializable {
     @Schema(description = "textLength", example = "70")
     private Integer textLength;
 
+    @Column(name = "sendingtime")
     @Schema(description = "sendingTime", example = "2024-11-24T14:30:45")
     private LocalDateTime sendingTime;
 
+    @Column(name = "title")
     @Schema(description = "title", example = "Attention weather forecast")
     private String title;
 
+    @Column(name = "content")
     @Schema(description = "content", example = "Due to bad weather, your next flight on 2024-11-26 will be cancelled.")
     private String content;
 
+    @Column(name = "notificationtype")
     @Schema(description = "notificationType", example = "warning")
     private String notificationType;
 

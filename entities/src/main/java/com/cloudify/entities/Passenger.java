@@ -5,27 +5,38 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.io.Serializable;
 
-@org.hibernate.annotations.NamedQueries(
-        @org.hibernate.annotations.NamedQuery(
-                name = "Passenger.getPassenger",
-                query = "SELECT p FROM Passenger p WHERE p.passportNumber  = :id"
-        ))
+@org.hibernate.annotations.NamedQueries(value =
+        {
+            @org.hibernate.annotations.NamedQuery(
+                    name = "Passenger.getPassenger",
+                    query = "SELECT p FROM Passenger p WHERE p.passportNumber  = :id"
+            ),
+            @org.hibernate.annotations.NamedQuery(
+                    name = "Passenger.deletePassenger",
+                    query = "DELETE FROM Passenger p WHERE p.passportNumber = :id"
+            ),
+            @org.hibernate.annotations.NamedQuery(
+                    name = "Passenger.updatePassenger",
+                    query = "UPDATE Passenger p SET p.firstName = :name, p.lastName = :lastName WHERE p.passportNumber = :id"
+            )
+        }
+)
 @Entity
 @Table(name = "passenger")
 @Schema(description = "Passenger information")
 public class Passenger implements Serializable {
 
     @Schema(description = "Passenger's name", example = "John")
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "firstname", nullable = false)
     private String firstName;
 
     @Schema(description = "Passenger's lastname", example = "Doe")
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "lastname", nullable = false)
     private String lastName;
 
     @Schema(description = "Passenger's passportNumber", example = "P987654321")
     @Id
-    @Column(name = "passport_number", unique = true, nullable = false)
+    @Column(name = "passportnumber", unique = true, nullable = false)
     private String passportNumber;
 
     public Passenger() {}

@@ -4,8 +4,8 @@ RUN mkdir /app
 
 WORKDIR /app
 
-ADD ./api/target/api-1.0-SNAPSHOT /app
+ADD ./api/target/api-1.0-SNAPSHOT.jar /app/api-1.0-SNAPSHOT.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "api-1.0-SNAPSHOT.jar"]
+CMD ["java", "-jar", "/app/api-1.0-SNAPSHOT.jar"]
