@@ -110,7 +110,15 @@ public class InventoryService implements HealthCheck{
             @PathParam("flightId") String flightId
     ) {
         try {
-            return Response.ok(inventoryServiceApiBean.getFlightDetails(flightId)).build();
+            Response.ResponseBuilder responseBuilder = Response.ok(inventoryServiceApiBean.getFlightDetails(flightId));
+
+            // Add CORS headers
+            responseBuilder.header("Access-Control-Allow-Origin", "http://localhost:4200");
+            responseBuilder.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            responseBuilder.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+            // Return the response
+            return responseBuilder.build();
         } catch (Exception e) {
             return Response.status(500).entity("Internal server error").build();
         }

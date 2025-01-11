@@ -112,7 +112,18 @@ public class WeatherAndDelayService {
 
             WeatherDelayPrediction prediction = weatherAndDelayServiceZrno.getWeatherAndDelayPrediction(flightId, originPrediction, destinationPrediction, finalDestination, origin);
 
-            return Response.ok(prediction).build();
+
+            Response.ResponseBuilder responseBuilder = Response.ok(prediction);
+
+            // Add CORS headers
+            responseBuilder.header("Access-Control-Allow-Origin", "http://localhost:4200");
+            responseBuilder.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            responseBuilder.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+            // Return the response
+            return responseBuilder.build();
+
+
 
         } catch (Exception e) {
             e.printStackTrace();
