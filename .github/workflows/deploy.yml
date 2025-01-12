@@ -57,8 +57,8 @@ jobs:
       #    OPTION A: Use "kubectl set image" if you already have a Deployment in the cluster:
       - name: Update Image in Existing Deployment
         run: |
-          kubectl --kubeconfig kubeconfig set image deployment/order-service \
-            order-service=CloudifyRegistry.azurecr.io/Cloudify:latest
+          kubectl --kubeconfig kubeconfig set image deployment/cloudify-service \
+            cloudify-service=CloudifyRegistry.azurecr.io/Cloudify:latest
 
       #    OPTION B: Alternatively, apply a YAML manifest that references the new image:
       # - name: Deploy using YAML
