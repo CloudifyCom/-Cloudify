@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudify-service
+  namespace: cloudify-namespace
+  labels:
+    app: cloudify-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cloudify-service
+  template:
+    metadata:
+      labels:
+        app: cloudify-service
+    spec:
+      containers:
+        - name: cloudify-service
+          image: CloudifyRegistry.azurecr.io/cloudify:latest
+          ports:
+            - containerPort: 8080
