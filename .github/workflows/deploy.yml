@@ -58,7 +58,8 @@ jobs:
       - name: Update Image in Existing Deployment
         run: |
           kubectl --kubeconfig kubeconfig set image deployment/cloudify-service \
-            cloudify-service=CloudifyRegistry.azurecr.io/Cloudify:latest
+            cloudify-service=CloudifyRegistry.azurecr.io/Cloudify:latest \
+            -n cloudify-namespace
 
       #    OPTION B: Alternatively, apply a YAML manifest that references the new image:
       # - name: Deploy using YAML
