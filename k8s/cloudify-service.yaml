@@ -3,6 +3,9 @@ kind: Service
 metadata:
   name: cloudify-service
   namespace: cloudify-namespace
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: MC_Cloudify_CloudifyCluster_italynorth
+    service.beta.kubernetes.io/azure-load-balancer-ip-address: 72.146.64.150
 spec:
   type: LoadBalancer
   selector:
