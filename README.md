@@ -31,14 +31,14 @@ The project addresses inefficiencies in disconnected systems that make it challe
 9. **🌦️ Weather and Delay Prediction Service**: Predict delays based on weather conditions.
 
 ### 🖼️ Architectural Diagram
-*(Dodaj sliku arhitekture)*
+![Slika sheme](https://i.imgur.com/mhWqzX5.jpeg)
 
 ---
 
 ## 🖥️ 3. Technology Stack
 - **⚙️ Backend**: Java with KumuluzEE
 - **🗄️ Database**: PostgreSQL
-- **🎨 Frontend**: Angular or React
+- **🎨 Frontend**: Angular
 - **📦 Containerization and Orchestration**: Kubernetes
 - **🔗 Version Control**: GitHub ([Repository Link](https://github.com/ilijagavrilovic/-Cloudify.git))
 
