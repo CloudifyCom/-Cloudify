@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cloudify-service
-  namespace: default
+  namespace: cloudify
   labels:
     app: cloudify-service
 spec:
