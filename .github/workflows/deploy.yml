@@ -55,13 +55,14 @@ jobs:
 
       # 9) Deploy to AKS
       #    OPTION A: Use "kubectl set image" if you already have a Deployment in the cluster:
-      - name: Update Image in Existing Deployment
-        run: |
-          kubectl --kubeconfig kubeconfig set image deployment/cloudify-service \
-            cloudify-service=CloudifyRegistry.azurecr.io/Cloudify:latest \
-            -n cloudify-namespace
+      #- name: Update Image in Existing Deployment
+      #  run: |
+      #    kubectl --kubeconfig kubeconfig set image deployment/cloudify-service \
+      #      cloudify-service=CloudifyRegistry.azurecr.io/Cloudify:latest \
+      #      -n cloudify-namespace
 
       #    OPTION B: Alternatively, apply a YAML manifest that references the new image:
-      # - name: Deploy using YAML
-      #   run: |
-      #     kubectl --kubeconfig kubeconfig apply -f k8s/deployment.yaml
+      - name: Deploy using YAML
+        run: |
+          kubectl --kubeconfig kubeconfig apply -f k8s/cloudify-deployment.yaml
+          kubectl --kubeconfig kubeconfig apply -f k8s/cloudify-service.yaml
