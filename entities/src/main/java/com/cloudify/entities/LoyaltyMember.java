@@ -76,4 +76,8 @@ public class LoyaltyMember implements Serializable {
     public void setPoints(int points) {
         this.points = points;
     }
+    public String getUserName() {
+        return this.user != null ? this.user.getName() : null;
+    }
+
 }

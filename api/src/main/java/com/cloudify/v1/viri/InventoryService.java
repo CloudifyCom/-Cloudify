@@ -157,7 +157,23 @@ public class InventoryService implements HealthCheck{
             @PathParam("flightId") String flightId
     ) {
         try {
-            return Response.ok(inventoryServiceApiBean.getSeatAvailability(flightId)).build();
+            // Get the flight details using the inventoryServiceApiBean
+            Flight flight = inventoryServiceApiBean.getFlightDetails(flightId);
+
+            // If flight is not found, return 404
+            if (flight == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Flight not found").build();
+            }
+
+            // Extract the number of seats available from the flight details
+            int numberOfSeats = flight.getMaxSeats();
+
+            // Build a response object with flightId and number of seats
+            SeatAvailability seatAvailability = new SeatAvailability();
+            seatAvailability.setFlightId(flightId);
+            seatAvailability.setAvailableSeats(numberOfSeats);
+
+            return Response.ok(seatAvailability).build();
         } catch (Exception e) {
             return Response.status(500).entity("Internal server error").build();
         }

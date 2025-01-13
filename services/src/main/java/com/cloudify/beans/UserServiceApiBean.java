@@ -16,20 +16,28 @@ public class UserServiceApiBean {
 
     public UserServiceApiBean() {
         // Adding some example users for testing
-        users.add(new User(1, "Mica", "mica@mejl", "99"));
-        users.add(new User(2, "Pera", "pera@mejl", "109"));
+        users.add(new User(1, "Mica Ivanovic", "mica@mejl", "066255255"));
+        users.add(new User(2, "Pera Mijatovic", "pera@mejl", "061288888"));
+        users.add(new User(3, "Grujica Sakic", "grujica@mejl", "061266666"));
+        users.add(new User(4, "Mojca Jesenk", "mojca@mejl", "061458459"));
     }
 
     public List<LoyaltyMember> listUsers(int limit, int offset) {
         // Example mock data (replace with actual database logic)
-        User mica = new User(1, "Mica", "mica@mejl", "99");
-        User pera = new User(2, "Pera", "pera@mejl", "109");
+        User mica = new User(1, "Mica Ivanovic", "mica@mejl", "066255255");
+        User pera = new User(2, "Pera Mijatovic", "pera@mejl", "061288888");
+        User grujica = new User(3, "Grujica Sakic", "grujica@mejl", "061266666");
+        User mojca = new User(4, "Mojca Jesenk", "mojca@mejl", "061458459");
         LoyaltyMember member = new LoyaltyMember(1, mica, 99);
         LoyaltyMember member2 = new LoyaltyMember(2, pera, 109);
+        LoyaltyMember member3 = new LoyaltyMember(3, grujica, 188);
+        LoyaltyMember member4 = new LoyaltyMember(4, mojca, 2009);
 
         return new ArrayList<LoyaltyMember>() {{
             add(member);
             add(member2);
+            add(member3);
+            add(member4);
         }};
     }
 

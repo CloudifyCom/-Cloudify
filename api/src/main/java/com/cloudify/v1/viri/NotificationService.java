@@ -20,6 +20,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 @ApplicationScoped
 @Path("/notifications")
@@ -30,9 +32,39 @@ public class NotificationService {
     @Inject
     NotificationBean notificationBean;
 
+    private static List<Notification> notifications = new ArrayList<Notification>() {{
+        add(new Notification("1", "198772", "Attention: Weather Alert", "Due to bad weather, your flight is cancelled."));
+        add(new Notification("2", "198773", "Flight Delay Notice", "Your flight is delayed by 2 hours."));
+        add(new Notification("3", "198774", "Flight Rescheduled", "Your flight has been rescheduled to tomorrow."));
+        add(new Notification("4", "198775", "New Seat Availability", "New seats are available on your flight."));
+    }};
+
     private static final Logger LOG = Logger.getLogger(NotificationService.class.getSimpleName());
 
-    // Pridobi obstoječe obvestilo
+    @Operation(description = "Retrieve all notifications.", summary = "Get all notifications")
+    @APIResponses({
+            @APIResponse(description = "Successful retrieval of all notifications!", responseCode = "200", content = @Content(schema = @Schema(implementation = Notification.class))),
+            @APIResponse(description = "No notifications found!", responseCode = "404")
+    })
+    @Tag(name = "Notification Service")
+    @GET
+    public Response getAllNotifications() {
+        if (notifications.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("No notifications available.")
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+                    .header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+                    .build();
+        }
+        return Response.ok(notifications)
+                .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+                .build();
+    }
+
+
     @Operation(description = "Retrieve the details of a specific notification.", summary = "Get an existing notification")
     @APIResponses({
             @APIResponse(description = "Successful retrieval of notification!", responseCode = "200", content = @Content(schema = @Schema(implementation = Notification.class))),
@@ -42,15 +74,21 @@ public class NotificationService {
     @GET
     @Path("/{notificationId}")
     public Response getNotification(@PathParam("notificationId") String notificationId) {
-
-        //pridobimo notification iz baze podatkov ako ne postoji vrnemo 404
-
-        boolean obstaja = false;
-        //Notification notification = notificationDatabase.get(notificationId);
-        if (obstaja){//booking == null) {
-            return Response.status(404).build();
+        for (Notification notification : notifications) {
+            if (notification.getNotificationId().equals(notificationId)) {
+                return Response.ok(notification)
+                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                        .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+                        .header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+                        .build();
+            }
         }
-        return Response.ok("Objekat notification").build();
+        return Response.status(Response.Status.NOT_FOUND)
+                .entity("Notification with ID " + notificationId + " not found.")
+                .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+                .build();
     }
 
     // Ustvari novo obvestilo
